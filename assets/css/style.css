@@ -1264,10 +1264,43 @@ button, input, select, textarea {
   border-color: var(--dark);
 }
 
+/* Tours slider: a horizontal scroll-snap track with arrows, dots and autoplay */
+.tours-slider {
+  position: relative;
+}
+
 .tours-card-grid {
+  --per-view: 3;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - (var(--per-view) - 1) * 26px) / var(--per-view));
   gap: 26px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  /* Room for the hover lift and shadow, which overflow would otherwise clip */
+  padding: 10px 0 30px;
+  margin: -10px 0 -30px;
+}
+
+.tours-card-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.tours-card-grid > .package-card {
+  scroll-snap-align: start;
+}
+
+/* Arrows and dots reuse the gallery slider styles (.slider-btn, .slider-dots) */
+.tours-slider .slider-btn {
+  z-index: 5;
+  margin-top: -24px;
+}
+
+#toursDots {
+  margin-top: 24px;
 }
 
 /* Full-photo card: the image fills the card, details sit on a glass panel */
@@ -3048,6 +3081,9 @@ body::before {
   .gallery-slide {
     flex-basis: calc((100% - 16px) / 2);
   }
+  .tours-card-grid {
+    --per-view: 2;
+  }
   /* Single column: label + heading first, then the collage, then the rest */
   .about-grid {
     display: flex;
@@ -3127,7 +3163,7 @@ body::before {
     padding: 20px 16px;
   }
   .tours-card-grid {
-    grid-template-columns: 1fr;
+    --per-view: 1;
   }
   .footer-columns {
     grid-template-columns: 1fr;

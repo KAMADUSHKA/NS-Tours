@@ -219,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTransportCalculator();
   renderTourCards('all');
   initTourFilters();
+  initToursSlider();
   initToursMegaMenu();
   initFaqAccordion();
   initMobileMenu();
@@ -453,6 +454,8 @@ function initTourFilters() {
       buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       renderTourCards(btn.dataset.filter);
+      const grid = document.getElementById('toursGrid');
+      if (grid) grid.scrollTo({ left: 0, behavior: 'auto' });
     });
   });
 }
@@ -502,6 +505,128 @@ function renderTourCards(filter = 'all') {
       </article>
     `;
   }).join('') + CUSTOM_TOUR_CARD;
+
+  if (refreshToursDots) refreshToursDots();
+}
+
+/* ==========================================================================
+   TOURS SLIDER
+   The card grid scrolls sideways with snap points; arrows step one card,
+   dots jump to a position, and autoplay advances every TOURS_INTERVAL.
+   ========================================================================== */
+const TOURS_INTERVAL = 4500;
+let refreshToursDots = null;
+
+function initToursSlider() {
+  const track = document.getElementById('toursGrid');
+  const dots = document.getElementById('toursDots');
+  if (!track || !dots) return;
+
+  const slider = track.closest('.tours-slider');
+  dots.style.setProperty('--slider-interval', `${TOURS_INTERVAL}ms`);
+
+  const step = () => {
+    const card = track.firstElementChild;
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 26;
+    return card ? card.offsetWidth + gap : track.clientWidth;
+  };
+
+  // One dot per reachable start position (cards minus those already in view)
+  const positions = () => {
+    const perView = Math.max(1, Math.round(track.clientWidth / step()));
+    return Math.max(1, track.children.length - perView + 1);
+  };
+
+  const updateActive = () => {
+    const index = Math.round(track.scrollLeft / step());
+    Array.from(dots.children).forEach((dot, i) => dot.classList.toggle('active', i === index));
+  };
+
+  refreshToursDots = () => {
+    dots.innerHTML = '';
+    for (let i = 0; i < positions(); i++) {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'slider-dot';
+      dot.setAttribute('aria-label', `Go to tour ${i + 1}`);
+      dot.addEventListener('click', () => {
+        track.scrollTo({ left: i * step(), behavior: 'smooth' });
+        restart();
+      });
+      dots.appendChild(dot);
+    }
+    updateActive();
+  };
+
+  const atEnd = () => track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+
+  const goNext = () => {
+    if (atEnd()) track.scrollTo({ left: 0, behavior: 'smooth' });
+    else track.scrollBy({ left: step(), behavior: 'smooth' });
+  };
+
+  const goPrev = () => {
+    if (track.scrollLeft <= 4) track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
+    else track.scrollBy({ left: -step(), behavior: 'smooth' });
+  };
+
+  slider.querySelector('.slider-next').addEventListener('click', () => { goNext(); restart(); });
+  slider.querySelector('.slider-prev').addEventListener('click', () => { goPrev(); restart(); });
+
+  let scrollTick = null;
+  track.addEventListener('scroll', () => {
+    cancelAnimationFrame(scrollTick);
+    scrollTick = requestAnimationFrame(updateActive);
+  }, { passive: true });
+
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(refreshToursDots, 150);
+  });
+
+  refreshToursDots();
+
+  // Autoplay (skipped for reduced motion), paused on hover/focus/touch and when off-screen
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let timer = null;
+  let inViewport = false;
+  let paused = false;
+
+  const start = () => {
+    if (reduceMotion || timer || !inViewport || paused) return;
+    timer = setInterval(goNext, TOURS_INTERVAL);
+    dots.classList.add('is-playing');
+  };
+  const stop = () => {
+    clearInterval(timer);
+    timer = null;
+    dots.classList.remove('is-playing');
+  };
+  // Restart the countdown so the progress dot animation stays in sync
+  function restart() {
+    stop();
+    start();
+  }
+
+  const pause = () => { paused = true; stop(); };
+  const resume = () => { paused = false; start(); };
+
+  slider.addEventListener('mouseenter', pause);
+  slider.addEventListener('mouseleave', resume);
+  slider.addEventListener('focusin', pause);
+  slider.addEventListener('focusout', (e) => {
+    if (!slider.contains(e.relatedTarget)) resume();
+  });
+  track.addEventListener('touchstart', pause, { passive: true });
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([entry]) => {
+      inViewport = entry.isIntersecting;
+      if (inViewport) start();
+      else stop();
+    }, { threshold: 0.4 }).observe(slider);
+  }
 }
 
 // Always-last card that invites visitors to build their own itinerary
