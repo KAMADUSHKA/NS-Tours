@@ -1,5 +1,5 @@
 /**
- * NS TOURS - Interactive Web Application Logic (Clean & Robust)
+ * NS Travel And Tours - Interactive Web Application Logic (Clean & Robust)
  * Features:
  * - Live Multi-Currency Conversion (USD, EUR, GBP, AUD, LKR)
  * - Interactive Transport Fare Calculator
@@ -9,7 +9,7 @@
  * - FAQ Accordions & Mobile Navigation
  */
 
-const WHATSAPP_PHONE = '94770000000'; // Default phone placeholder
+const WHATSAPP_PHONE = '94703050177';
 
 // Currency conversion rates relative to 1 USD
 const CURRENCIES = {
@@ -323,7 +323,7 @@ function initTransportCalculator() {
       const pax = paxEl ? paxEl.value : '2';
       const quotePrice = document.getElementById('calcQuotePrice').textContent;
 
-      const message = `Hello NS TOURS!\n\nI would like to book a private transfer:\n\n*Pickup:* ${pickup}\n*Drop-off:* ${dropoff}\n*Vehicle:* ${vehicle}\n*Date:* ${date} at ${time || 'Flexible'}\n*Passengers:* ${pax}\n*Estimated Rate:* ${quotePrice}\n\nPlease confirm availability and driver details. Thank you!`;
+      const message = `Hello NS Travel And Tours!\n\nI would like to book a private transfer:\n\n*Pickup:* ${pickup}\n*Drop-off:* ${dropoff}\n*Vehicle:* ${vehicle}\n*Date:* ${date} at ${time || 'Flexible'}\n*Passengers:* ${pax}\n*Estimated Rate:* ${quotePrice}\n\nPlease confirm availability and driver details. Thank you!`;
 
       openWhatsApp(message);
     });
@@ -646,7 +646,7 @@ const CUSTOM_TOUR_CARD = `
       </ul>
       <div class="custom-tour-actions">
         <a href="#planner" class="btn-book-cta">Plan My Trip →</a>
-        <button class="btn-card-wa" onclick="openWhatsApp('Hello NS TOURS!\\n\\nI would like a custom Sri Lanka itinerary. Could you help me plan my trip?')">
+        <button class="btn-card-wa" onclick="openWhatsApp('Hello NS Travel And Tours!\\n\\nI would like a custom Sri Lanka itinerary. Could you help me plan my trip?')">
           <span><svg class="wa-icon" aria-hidden="true"><use href="#icon-whatsapp"></use></svg> Ask on WhatsApp</span>
         </button>
       </div>
@@ -719,7 +719,7 @@ function bookTourWhatsApp(tourId) {
   if (!tour) return;
 
   const price = formatPrice(tour.basePriceUSD);
-  const message = `Hello NS TOURS!\n\nI would like to book this tour package:\n\n*Tour:* ${tour.title}\n*Duration:* ${tour.duration}\n*Price:* From ${price} / person\n\nPlease let me know availability and pickup options. Thank you!`;
+  const message = `Hello NS Travel And Tours!\n\nI would like to book this tour package:\n\n*Tour:* ${tour.title}\n*Duration:* ${tour.duration}\n*Price:* From ${price} / person\n\nPlease let me know availability and pickup options. Thank you!`;
 
   openWhatsApp(message);
 }
@@ -731,7 +731,7 @@ function initVehicleCards() {
       const model = card.querySelector('.vehicle-sub')?.textContent.trim() || '';
       const route = card.querySelector('.vehicle-fare-footer span')?.textContent.trim() || '';
       const rate = card.querySelector('.vehicle-fare-footer strong')?.textContent.trim() || '';
-      const message = `Hello NS TOURS!\n\nI would like to book this vehicle:\n\n*Vehicle:* ${title} (${model})\n*Example Route:* ${route}\n*Rate:* ${rate}\n\nPlease share availability and a quote for my trip. Thank you!`;
+      const message = `Hello NS Travel And Tours!\n\nI would like to book this vehicle:\n\n*Vehicle:* ${title} (${model})\n*Example Route:* ${route}\n*Rate:* ${rate}\n\nPlease share availability and a quote for my trip. Thank you!`;
       openWhatsApp(message);
     };
 
@@ -766,7 +766,7 @@ function initPlannerForm() {
     const guests = document.getElementById('planGuests') ? document.getElementById('planGuests').value : '2 Adults';
     const notes = document.getElementById('planNotes') ? document.getElementById('planNotes').value : 'No special requests';
 
-    const msg = `Hello NS TOURS!\n\nI want to design a *Custom Sri Lanka Tour*:\n\n*Name:* ${name}\n*Duration:* ${days}\n*Preferred Style:* ${vibes}\n*Travelers:* ${guests}\n*Special Interests:* ${notes}\n\nPlease share a recommended custom itinerary and private chauffeur quote. Thank you!`;
+    const msg = `Hello NS Travel And Tours!\n\nI want to design a *Custom Sri Lanka Tour*:\n\n*Name:* ${name}\n*Duration:* ${days}\n*Preferred Style:* ${vibes}\n*Travelers:* ${guests}\n*Special Interests:* ${notes}\n\nPlease share a recommended custom itinerary and private chauffeur quote. Thank you!`;
 
     openWhatsApp(msg);
   });

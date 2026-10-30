@@ -1920,8 +1920,41 @@ button, input, select, textarea {
 /* --------------------------------------------------------------------------
    FAQ Accordions
    -------------------------------------------------------------------------- */
+.faq-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.faq-map {
+  min-height: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.faq-map iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  border: 0;
+}
+
+@media (max-width: 992px) {
+  .faq-layout {
+    grid-template-columns: 1fr;
+  }
+  .faq-map,
+  .faq-map iframe {
+    min-height: 320px;
+  }
+}
+
 .faq-wrap-box {
   max-width: 760px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -2125,6 +2158,18 @@ button, input, select, textarea {
 
 .footer-nav a:hover {
   color: var(--primary);
+}
+
+.footer-map {
+  margin-bottom: 32px;
+}
+
+.footer-map iframe {
+  display: block;
+  width: 100%;
+  height: 320px;
+  border: 0;
+  border-radius: 8px;
 }
 
 .footer-bottom-line {
@@ -3428,7 +3473,7 @@ body::before {
     display: none;
   }
   .brand-title {
-    font-size: 1.15rem;
+    font-size: 0.95rem;
   }
   .brand-logo-img {
     width: 42px;
