@@ -359,6 +359,34 @@ button, input, select, textarea {
   border-left-color: var(--primary);
 }
 
+.tours-mega-heading.is-ocean {
+  margin-top: 8px;
+  border-left-color: #0EA5E9;
+}
+
+/* Water activities: compact wrap-around pills (name only, no meta line) */
+.tours-mega-list.mega-water-list {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 2px 0 0 4px;
+}
+
+.tours-mega-item.mega-water-item {
+  width: auto;
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(14, 165, 233, 0.25);
+}
+
+.mega-water-item .mega-item-title {
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
 .tours-mega-list {
   list-style: none;
   display: flex;
@@ -1299,7 +1327,8 @@ button, input, select, textarea {
   margin-top: -24px;
 }
 
-#toursDots {
+#toursDots,
+#waterDots {
   margin-top: 24px;
 }
 
@@ -2122,10 +2151,37 @@ button, input, select, textarea {
    Footer
    -------------------------------------------------------------------------- */
 .footer-wrap {
+  position: relative;
   background: #0B1120;
   color: #94A3B8;
   padding: 60px 0 24px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Round "back to top" button sitting on the footer's top edge */
+.back-to-top {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  color: #FFFFFF;
+  font-size: 1.3rem;
+  font-weight: 800;
+  box-shadow: 0 6px 18px rgba(217, 119, 6, 0.35);
+  transition: var(--transition);
+}
+
+.back-to-top:hover {
+  color: #FFFFFF;
+  transform: translate(-50%, calc(-50% - 4px));
+  box-shadow: 0 10px 24px rgba(217, 119, 6, 0.45);
 }
 
 .footer-columns {

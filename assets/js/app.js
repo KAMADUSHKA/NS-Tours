@@ -48,168 +48,264 @@ const VEHICLE_RATES = {
 
 // Tour Packages Database
 const TOURS = [
+  // ---------------- Half-Day Tours ----------------
   {
-    id: 'galle-day',
-    category: '1day',
-    tag: '1-Day Excursion',
-    featured: true,
-    title: 'Galle Dutch Fort, Turtle Sanctuary & Madu River Safari',
-    duration: '1 Day (10-12 Hours)',
-    badge: '1-Day Tour',
-    image: 'assets/images/galle.jpg',
-    basePriceUSD: 65,
-    description: 'Explore the UNESCO colonial citadel of Galle, touch baby turtles at Kosgoda conservation project, and take a scenic mangrove boat safari through Madu River.',
-    inclusions: ['Private AC Vehicle', 'Fuel & Highway Tolls', 'English Chauffeur Guide', 'Bottled Mineral Water'],
+    id: 'madu-river-half',
+    category: 'halfday',
+    tag: 'Half-Day Tour',
+    featured: false,
+    title: 'Madu River Safari & Cultural Tour',
+    duration: 'Half Day',
+    badge: 'Half-Day Tour',
+    image: 'assets/images/ocean.jpg',
+    basePriceUSD: null,
+    description: 'A 2-hour boat safari through the Madu River mangroves and cinnamon island, plus the giant Buddha, a turtle hatchery, a moonstone mine, the Tsunami Museum and an Ayurveda herbal garden.',
+    inclusions: ['Madu River Boat Safari (2 Hours)', 'Turtle Hatchery', 'Moonstone Mine', 'Tsunami Museum'],
     itinerary: [
-      { time: '06:30 AM', title: 'Hotel Pickup', desc: 'Pick up from Colombo, Negombo, or Airport in a luxury air-conditioned vehicle.' },
-      { time: '08:30 AM', title: 'Madu River Mangrove Boat Safari', desc: 'Cruise through 64 islands, visit cinnamon processing island, and experience natural fish therapy.' },
-      { time: '11:00 AM', title: 'Sea Turtle Conservation Project', desc: 'Learn about protected sea turtle nesting grounds and release hatchlings into the ocean.' },
-      { time: '12:30 PM', title: 'Authentic Seafood / Rice & Curry Lunch', desc: 'Enjoy fresh coastal dining along the oceanfront with ocean breeze.' },
-      { time: '02:00 PM', title: 'Galle Dutch Fort UNESCO Exploration', desc: 'Guided walk through ramparts, iconic lighthouse, historic clocktower, and charming boutique alleys.' },
-      { time: '05:30 PM', title: 'Stilt Fishermen of Koggala & Sunset', desc: 'Witness Sri Lanka traditional stilt fishing at golden hour before comfortable return drive.' }
+      { title: 'Tsunami Honganji Viharaya', desc: 'Visit the impressive giant Buddha statue.' },
+      { title: 'Madu River Boat Safari (2 Hours)', desc: 'Enjoy a scenic boat ride through the beautiful mangrove forests and visit a cinnamon island to discover traditional cinnamon cultivation and production.' },
+      { title: 'Turtle Hatchery', desc: 'Learn about sea turtle conservation and protection.' },
+      { title: 'Moonstone Mine', desc: 'Explore a traditional moonstone mine and discover Sri Lanka’s gemstone industry.' },
+      { title: 'Tsunami Museum', desc: 'Learn about the history and impact of the 2004 tsunami.' },
+      { title: 'Ayurveda Herbal Garden', desc: 'Discover traditional Sri Lankan Ayurvedic medicine and herbal plants.' }
+    ]
+  },
+  {
+    id: 'galle-city-half',
+    category: 'halfday',
+    tag: 'Half-Day Tour',
+    featured: false,
+    title: 'Galle City Tour',
+    duration: 'Half Day',
+    badge: 'Half-Day Tour',
+    image: 'assets/images/galle.jpg',
+    basePriceUSD: null,
+    description: 'Explore the UNESCO-listed Galle Fort and lighthouse, Jungle Beach and Rumassala Temple, with visits to a gem museum, silk factory, herbal garden and local fruit market.',
+    inclusions: ['Galle Fort (UNESCO)', 'Galle Lighthouse', 'Jungle Beach', 'Gem & Jewellery Museum'],
+    itinerary: [
+      { title: 'Galle Fort', desc: 'Explore the historic Dutch Fort, a UNESCO World Heritage Site.' },
+      { title: 'Galle Lighthouse', desc: 'Visit the iconic lighthouse overlooking the Indian Ocean.' },
+      { title: 'Hindu Kovil', desc: 'Discover a traditional Hindu temple.' },
+      { title: 'Jungle Beach', desc: 'Enjoy the beautiful tropical beach surrounded by greenery.' },
+      { title: 'Rumassala Buddhist Temple', desc: 'Visit the peaceful Buddhist temple at Rumassala.' },
+      { title: 'Ayurveda Herbal Garden', desc: 'Learn about traditional Sri Lankan Ayurvedic treatments and medicinal plants.' },
+      { title: 'Gem & Jewellery Factory and Museum', desc: 'Discover Sri Lanka’s precious gemstones and traditional jewellery-making process.' },
+      { title: 'Local Fruit Market', desc: 'Explore a local market and experience Sri Lanka’s variety of fresh tropical fruits.' },
+      { title: 'Natural Silk Factory', desc: 'Visit a local silk factory and discover the traditional silk-making process, from raw silk to beautifully crafted silk products.' }
+    ]
+  },
+  {
+    id: 'elephant-half',
+    category: 'halfday',
+    tag: 'Half-Day Tour',
+    featured: false,
+    title: 'Elephant Experience',
+    duration: 'Half Day',
+    badge: 'Half-Day Tour',
+    image: 'assets/images/safari.jpg',
+    basePriceUSD: null,
+    description: 'Enjoy a unique opportunity to interact with elephants, riding, feeding and bathing them under the supervision of experienced elephant handlers.',
+    inclusions: ['Elephant Riding', 'Feeding the Elephant', 'Elephant Bathing'],
+    itinerary: [
+      { title: 'Elephant Riding', desc: 'Ride an elephant under the supervision of experienced elephant handlers.' },
+      { title: 'Feeding the Elephant', desc: 'Get close and hand-feed the elephants.' },
+      { title: 'Elephant Bathing', desc: 'Help bathe the elephants in a unique hands-on experience.' }
+    ]
+  },
+  {
+    id: 'nilwala-river-half',
+    category: 'halfday',
+    tag: 'Half-Day Tour',
+    featured: false,
+    title: 'Nilwala River Safari & Crocodile Adventure',
+    duration: 'Half Day',
+    badge: 'Half-Day Tour',
+    image: 'assets/images/safari.jpg',
+    basePriceUSD: null,
+    description: 'An exciting boat safari on the Nilwala River to see wild crocodiles, monkeys and colourful birdlife among lush mangroves, with fresh tropical fruit and king coconut.',
+    inclusions: ['Crocodile Watching', 'River Boat Safari', 'Bird & Monkey Watching', 'Tropical Fruit & King Coconut'],
+    itinerary: [
+      { title: 'Crocodile Watching', desc: 'Enjoy an exciting boat safari and observe wild crocodiles in their natural habitat.' },
+      { title: 'Scenic River Boat Safari', desc: 'Explore the beautiful Nilwala River, surrounded by lush greenery and mangrove vegetation.' },
+      { title: 'Bird Watching', desc: 'Spot colourful kingfishers, eagles, herons, egrets, and other native bird species.' },
+      { title: 'Monkey Watching', desc: 'Observe wild monkeys living along the riverbanks.' },
+      { title: 'Wildlife Photography', desc: 'Capture memorable photographs of crocodiles, birds, monkeys, and the beautiful river scenery.' },
+      { title: 'Tropical Fruit & King Coconut Experience', desc: 'Enjoy fresh seasonal tropical fruits and refreshing king coconut during the boat trip, where provided.' }
+    ]
+  },
+  // ---------------- One-Day Tours ----------------
+  {
+    id: 'ella-udawalawe-day',
+    category: '1day',
+    tag: 'One-Day Tour',
+    featured: false,
+    title: 'Ella + Udawalawe One-Day Tour',
+    duration: '1 Day',
+    badge: '1-Day Tour',
+    image: 'assets/videos/hero-train-poster.jpg',
+    basePriceUSD: null,
+    description: 'See young elephants at the Udawalawe Elephant Transit Home, then Ella’s highlights: Ravana Waterfall, Little Adam’s Peak, Nine Arch Bridge, a scenic train ride and tea country.',
+    inclusions: ['Udawalawe Elephant Transit Home', 'Nine Arch Bridge', 'Little Adam’s Peak', 'Scenic Train Ride'],
+    itinerary: [
+      { title: 'Udawalawe Elephant Transit Home', desc: 'Observe young elephants at the elephant rehabilitation centre.' },
+      { title: 'Ravana Waterfall', desc: 'Visit one of Sri Lanka’s beautiful natural waterfalls.' },
+      { title: 'Little Adam’s Peak', desc: 'Enjoy a scenic hike and breathtaking mountain views.' },
+      { title: 'Nine Arch Bridge', desc: 'Discover the famous railway bridge surrounded by lush green landscapes.' },
+      { title: 'Scenic Train Ride', desc: 'Experience one of Sri Lanka’s most beautiful train journeys.' },
+      { title: 'Tea Plantation & Tea Shop', desc: 'Explore Sri Lanka’s tea plantations and discover the traditional tea-making process.' },
+      { title: 'Ayurveda & Spice Garden', desc: 'Learn about traditional Sri Lankan herbal medicine and spices.' }
+    ]
+  },
+  {
+    id: 'yala-safari-day',
+    category: '1day',
+    tag: 'One-Day Tour',
+    featured: false,
+    title: 'Yala National Park Safari',
+    duration: '1 Day',
+    badge: '1-Day Tour',
+    image: 'assets/images/safari.jpg',
+    basePriceUSD: null,
+    description: 'A 4-hour jeep safari in one of Sri Lanka’s most famous national parks, home to leopards, elephants, crocodiles, bears and many bird species.',
+    inclusions: ['4-Hour Jeep Safari', 'Experienced Safari Driver-Guide'],
+    itinerary: [
+      { title: '4-Hour Jeep Safari at Yala National Park', desc: 'Experience an exciting wildlife adventure in one of Sri Lanka’s most famous national parks. Explore the natural habitat of leopards, elephants, crocodiles, bears, and various bird species with an experienced safari driver-guide.' }
+    ]
+  },
+  {
+    id: 'ella-yala-day',
+    category: '1day',
+    tag: 'One-Day Tour',
+    featured: false,
+    title: 'Ella + Yala One-Day Tour',
+    duration: '1 Day',
+    badge: '1-Day Tour',
+    image: 'assets/images/hero.jpg',
+    basePriceUSD: null,
+    description: 'Ella’s waterfalls, mountain views, Nine Arch Bridge, train ride and tea country, combined with a 4-hour jeep safari in Yala National Park.',
+    inclusions: ['Ella Sightseeing', 'Nine Arch Bridge', 'Yala Jeep Safari (4 Hours)'],
+    itinerary: [
+      { title: 'Ravana Waterfall', desc: 'Enjoy the beautiful natural scenery.' },
+      { title: 'Little Adam’s Peak', desc: 'Explore the scenic mountain viewpoint.' },
+      { title: 'Nine Arch Bridge', desc: 'Visit the iconic railway bridge.' },
+      { title: 'Scenic Train Ride', desc: 'Enjoy the beautiful landscapes of Sri Lanka’s hill country.' },
+      { title: 'Tea Plantation & Tea Shop', desc: 'Discover Sri Lanka’s famous tea industry.' },
+      { title: 'Ayurveda & Spice Garden', desc: 'Explore traditional herbal plants and spices.' },
+      { title: 'Yala National Park Safari (4 Hours)', desc: 'Enjoy an exciting jeep safari to discover Sri Lanka’s incredible wildlife.' }
+    ]
+  },
+  {
+    id: 'kandy-ambuluwawa-day',
+    category: '1day',
+    tag: 'One-Day Tour',
+    featured: false,
+    title: 'Kandy + Ambuluwawa One-Day Tour',
+    duration: '1 Day',
+    badge: '1-Day Tour',
+    image: 'assets/images/hero.jpg',
+    basePriceUSD: null,
+    description: 'The Temple of the Sacred Tooth Relic, panoramic views from Ambuluwawa Tower, Pinnawala Elephant Orphanage, a tea factory and a herbal & spice garden.',
+    inclusions: ['Temple of the Tooth', 'Ambuluwawa Tower', 'Pinnawala Elephant Orphanage', 'Tea Factory'],
+    itinerary: [
+      { title: 'Temple of the Sacred Tooth Relic', desc: 'Visit one of Sri Lanka’s most important Buddhist religious sites.' },
+      { title: 'Ambuluwawa Tower', desc: 'Enjoy spectacular panoramic views from the famous multi-religious tower.' },
+      { title: 'Pinnawala Elephant Orphanage', desc: 'Discover the elephants and learn about their care and conservation.' },
+      { title: 'Tea Plantation & Tea Factory', desc: 'Explore the tea-growing process and discover the production of world-famous Ceylon tea.' },
+      { title: 'Herbal & Spice Garden', desc: 'Discover traditional Sri Lankan spices, herbs and Ayurvedic plants.' }
+    ]
+  },
+  {
+    id: 'kandy-day',
+    category: '1day',
+    tag: 'One-Day Tour',
+    featured: false,
+    title: 'Kandy One-Day Tour',
+    duration: '1 Day',
+    badge: '1-Day Tour',
+    image: 'assets/images/hero.jpg',
+    basePriceUSD: null,
+    description: 'The Temple of the Sacred Tooth Relic, the Royal Botanical Gardens in Peradeniya, the Kandy Wax Museum, a tea factory and a herbal & spice garden.',
+    inclusions: ['Temple of the Tooth', 'Peradeniya Botanical Gardens', 'Kandy Wax Museum', 'Tea Factory'],
+    itinerary: [
+      { title: 'Temple of the Sacred Tooth Relic', desc: 'Explore the historic Buddhist temple in Kandy.' },
+      { title: 'Royal Botanical Gardens, Peradeniya', desc: 'Discover beautiful gardens and a wide variety of tropical plants.' },
+      { title: 'Kandy Wax Museum', desc: 'Explore the wax figures and displays.' },
+      { title: 'Tea Plantation & Tea Factory', desc: 'Explore the tea-growing process and discover the production of world-famous Ceylon tea.' },
+      { title: 'Herbal & Spice Garden', desc: 'Discover traditional Sri Lankan spices, herbs and Ayurvedic plants.' }
     ]
   },
   {
     id: 'sigiriya-day',
     category: '1day',
-    tag: '1-Day Excursion',
-    featured: true,
-    title: 'Sigiriya Lion Rock & Dambulla Golden Cave Temple',
-    duration: '1 Day (12-14 Hours)',
+    tag: 'One-Day Tour',
+    featured: false,
+    title: 'Sigiriya One-Day Tour',
+    duration: '1 Day',
     badge: '1-Day Tour',
     image: 'assets/images/sigiriya.jpg',
-    basePriceUSD: 78,
-    description: 'Conquer the 5th-century palace in the sky at Sigiriya and marvel at 150+ ancient Buddha statues inside the sacred Dambulla cave complex.',
-    inclusions: ['Private AC Vehicle', 'Expressway Tolls', 'English Chauffeur', 'Village Experience', 'Bottled Water'],
+    basePriceUSD: null,
+    description: 'Climb Sigiriya Rock Fortress or Pidurangala Rock, experience a Sigiriya village tour, and visit the Dambulla Golden Temple, a herbal & spice garden and a silk factory.',
+    inclusions: ['Sigiriya or Pidurangala Rock', 'Sigiriya Village Tour', 'Dambulla Golden Temple', 'Silk Factory'],
     itinerary: [
-      { time: '06:00 AM', title: 'Departure', desc: 'Early pickup for scenic drive towards the central Cultural Triangle.' },
-      { time: '09:30 AM', title: 'Sigiriya Rock Fortress Summit', desc: 'Ascend the 1,200 steps past the Mirror Wall and world-famous Sigiriya frescoes to the royal summit.' },
-      { time: '01:00 PM', title: 'Traditional Hiriwadunna Village Lunch', desc: 'Authentic Sri Lankan curries cooked in clay pots over wood fires, with a bullock cart & catamaran ride.' },
-      { time: '03:30 PM', title: 'Dambulla Golden Cave Temple', desc: 'Visit 5 spectacular cave shrines filled with centuries-old Buddhist murals and gold statues.' },
-      { time: '06:00 PM', title: 'Relaxing Return Transfer', desc: 'Comfortable drop-off back at your hotel in Colombo, Negombo, or Kandy.' }
+      { title: 'Sigiriya Rock Fortress or Pidurangala Rock', desc: 'Explore the famous UNESCO World Heritage Site of Sigiriya or enjoy breathtaking panoramic views of Sigiriya Rock from Pidurangala.' },
+      { title: 'Sigiriya Village Tour', desc: 'Experience traditional Sri Lankan village life, local culture and traditional activities.' },
+      { title: 'Dambulla Golden Temple', desc: 'Visit the famous Golden Temple and explore its historic Buddhist cave temple complex.' },
+      { title: 'Herbal & Spice Garden', desc: 'Discover traditional Sri Lankan spices, medicinal herbs and Ayurvedic plants.' },
+      { title: 'Silk Factory', desc: 'Discover the silk production process and learn how beautiful silk fabrics are made. Explore a collection of traditional Sri Lankan dresses, cultural outfits and other silk products.' },
+      { title: 'Optional: Elephant Riding Experience', desc: 'Enjoy an elephant riding experience and get a closer opportunity to interact with these magnificent animals.' }
     ]
   },
   {
-    id: 'safari-day',
-    category: 'safari',
-    tag: 'Wildlife & Nature',
-    featured: true,
-    title: 'Udawalawe Wild Elephant Safari & Transit Home',
-    duration: '1 Day (10-12 Hours)',
-    badge: 'Safari & Ocean',
-    image: 'assets/images/safari.jpg',
-    basePriceUSD: 85,
-    description: 'Guaranteed wild elephant sightings in open grassland savannah with a private 4x4 open safari jeep and elephant milk-feeding visit.',
-    inclusions: ['Private 4x4 Safari Jeep', 'Park Guide/Tracker', 'AC Chauffeur Transfer', 'Cold Drinks & Water'],
-    itinerary: [
-      { time: '05:30 AM', title: 'South Coast or Colombo Pickup', desc: 'Pickup from Mirissa, Galle, Bentota, or Colombo.' },
-      { time: '09:00 AM', title: 'Elephant Transit Home (ETH)', desc: 'Witness orphaned baby elephant calves being bottle-fed by wildlife rangers before rehabilitation.' },
-      { time: '10:30 AM', title: 'Private 4x4 Open Safari Game Drive', desc: 'Track massive herds of wild Asian elephants, water buffaloes, spotted deer, crocodiles, and exotic birds.' },
-      { time: '02:00 PM', title: 'Tropical Lunch at Lakeview Rest', desc: 'Savor traditional cuisine overlooking the tranquil reservoir.' },
-      { time: '04:00 PM', title: 'Return Journey', desc: 'Smooth return transport to your coastal hotel or airport.' }
-    ]
-  },
-  {
-    id: 'mirissa-ocean',
-    category: 'safari',
-    tag: 'Marine Adventure',
+    id: 'sinharaja-day',
+    category: '1day',
+    tag: 'One-Day Tour',
     featured: false,
-    title: 'Mirissa Blue Whale Cruise & Turtle Snorkeling',
-    duration: '1 Day (8-10 Hours)',
-    badge: 'Ocean & Marine',
-    image: 'assets/images/ocean.jpg',
-    basePriceUSD: 70,
-    description: 'Cruise the deep blue Indian Ocean to encounter the largest mammal on earth, followed by snorkeling alongside wild sea turtles in Polhena reef.',
-    inclusions: ['Luxury Boat Cruise', 'Coast Guard Approved Life Vests', 'Snorkeling Gear', 'Breakfast Onboard'],
-    itinerary: [
-      { time: '05:45 AM', title: 'Mirissa Harbor Check-in', desc: 'Board the passenger vessel equipped with safety gear and navigation radar.' },
-      { time: '06:30 AM', title: 'Sunrise Blue Whale & Dolphin Watching', desc: 'Sail into international whale migration corridors to spot Blue Whales, Bryde whales, and spinner dolphins.' },
-      { time: '11:00 AM', title: 'Polhena Sanctuary Turtle Snorkeling', desc: 'Swim in calm lagoon waters with green sea turtles in their natural coral habitat.' },
-      { time: '01:30 PM', title: 'Coconut Tree Hill & Beach Lunch', desc: 'Capture the famous curved palm cliff photos and enjoy fresh beachfront refreshments.' }
-    ]
-  },
-  {
-    id: 'ella-2day',
-    category: '2day',
-    tag: '2-Day Escape',
-    featured: true,
-    title: 'Ella Scenic Train, Little Adam’s Peak & Tea Country',
-    duration: '2 Days / 1 Night',
-    badge: '2-Day Escapes',
+    title: 'Sinharaja Rainforest & Seven Waterfalls Tour',
+    duration: '1 Day',
+    badge: '1-Day Tour',
     image: 'assets/images/hero.jpg',
-    basePriceUSD: 160,
-    description: 'Board the legendary highland blue train across misty viaducts, visit Little Adam’s Peak, witness Nine Arches Bridge, and tour tea factories.',
-    inclusions: ['2 Days Dedicated Chauffeur', 'Scenic Train Reserved Tickets', 'All Expressway/Fuel Fees', 'Tea Factory Tasting'],
+    basePriceUSD: null,
+    description: 'Explore Sri Lanka’s UNESCO-listed Sinharaja Rainforest, rich in endemic wildlife, and discover seven beautiful waterfalls in lush tropical vegetation.',
+    inclusions: ['Sinharaja Rainforest (UNESCO)', 'Seven Waterfalls'],
     itinerary: [
-      { time: 'Day 1 - Morning', title: 'Drive to Hill Country via Ramboda Falls', desc: 'Scenic ascent past rolling emerald hills, lush waterfalls, and misty mountain passes.' },
-      { time: 'Day 1 - Afternoon', title: 'Nuwara Eliya "Little England" & Tea Estate', desc: 'Walk through colonial architecture, Gregory Lake, and tour an active Ceylon tea factory.' },
-      { time: 'Day 1 - Evening', title: 'Scenic Train to Ella', desc: 'Ride the world’s most scenic railway over mountain ridges and tunnels into Ella mountain village.' },
-      { time: 'Day 2 - Sunrise', title: 'Nine Arches Bridge & Morning Train', desc: 'Watch the historic train cross the dramatic stone bridge amid lush greenery.' },
-      { time: 'Day 2 - Midday', title: 'Hike to Little Adam’s Peak & Ravana Falls', desc: 'Panoramic 360-degree vistas across Ella Gap and cascading Ravana waterfall before return.' }
+      { title: 'Sinharaja Rainforest', desc: 'Explore Sri Lanka’s famous UNESCO World Heritage tropical rainforest, known for its rich biodiversity and endemic wildlife.' },
+      { title: 'Seven Waterfalls', desc: 'Discover seven beautiful waterfalls surrounded by lush tropical vegetation and enjoy the natural beauty of Sri Lanka.' }
     ]
   },
   {
-    id: 'culture-2day',
-    category: '2day',
-    tag: '2-Day Escape',
+    id: 'colombo-city-day',
+    category: '1day',
+    tag: 'One-Day Tour',
     featured: false,
-    title: 'Cultural Triangle & Minneriya Safari 2-Day Tour',
-    duration: '2 Days / 1 Night',
-    badge: '2-Day Escapes',
-    image: 'assets/images/sigiriya.jpg',
-    basePriceUSD: 175,
-    description: 'Discover the ancient royal kingdoms of Sigiriya, Polonnaruwa, Dambulla cave temple, and an afternoon safari with hundreds of wild elephants.',
-    inclusions: ['Private Luxury AC Van/Car', 'Minneriya 4x4 Safari Jeep', 'Licensed Chauffeur Guide', 'Complimentary Water & Wi-Fi'],
+    title: 'Colombo City Tour',
+    duration: '1 Day',
+    badge: '1-Day Tour',
+    image: 'assets/images/fleet.jpg',
+    basePriceUSD: null,
+    description: 'Lotus Tower, the Red Mosque, Independence Square, a Hindu kovil and Gangaramaya Temple, finishing with shopping at Colombo’s popular malls.',
+    inclusions: ['Lotus Tower', 'Red Mosque', 'Gangaramaya Temple', 'Shopping Malls'],
     itinerary: [
-      { time: 'Day 1 - 07:00 AM', title: 'Colombo/Airport to Dambulla & Sigiriya', desc: 'Visit Dambulla cave murals followed by sunset climb of Pidurangala or Sigiriya Rock.' },
-      { time: 'Day 1 - Evening', title: 'Night Stay in Sigiriya Eco Lodge', desc: 'Relax in lush forest surroundings with traditional dinner.' },
-      { time: 'Day 2 - 08:30 AM', title: 'Polonnaruwa Ancient Royal Ruins', desc: 'Explore the 12th-century stone palaces and the gigantic Gal Vihara carved rock statues.' },
-      { time: 'Day 2 - 02:30 PM', title: 'Minneriya Elephant Gathering Safari', desc: 'Watch large herds of up to 200 elephants congregate around the ancient reservoir.' },
-      { time: 'Day 2 - 06:30 PM', title: 'Comfortable Return Transfer', desc: 'Private transfer back to your destination of choice.' }
-    ]
-  },
-  {
-    id: 'multiday-5day',
-    category: 'multiday',
-    tag: 'Signature Expedition',
-    featured: true,
-    title: '5-Day Classic Ceylon: Heritage, Tea Hills & Safari',
-    duration: '5 Days / 4 Nights',
-    badge: 'Multi-Day',
-    image: 'assets/images/hero.jpg',
-    basePriceUSD: 360,
-    description: 'The definitive Sri Lanka journey covering Sigiriya rock fortress, Kandy Temple of the Tooth, Nuwara Eliya tea country, Ella blue train, and Yala safari.',
-    inclusions: ['5 Days Dedicated Private Chauffeur', 'Unlimited Mileage in AC Vehicle', 'All Fuel, Parking & Highway Tolls', 'Chauffeur Accommodation & Meals'],
-    itinerary: [
-      { time: 'Day 1', title: 'Airport CMB / Negombo to Sigiriya & Dambulla', desc: 'Welcome at CMB airport, scenic highway transfer, and Dambulla Cave Temple visit.' },
-      { time: 'Day 2', title: 'Sigiriya Rock Summit & Kandy Royal Capital', desc: 'Climb Sigiriya fortress, spice garden visit, and evening Kandy Temple of the Sacred Tooth Relic.' },
-      { time: 'Day 3', title: 'Kandy to Nuwara Eliya Tea Estates & Waterfalls', desc: 'Royal Botanical Gardens Peradeniya, tea picking experience, and misty colonial high plains.' },
-      { time: 'Day 4', title: 'Iconic Ella Blue Train & Nine Arches Bridge', desc: 'Highland train journey, Little Adam’s Peak trek, and transfer down to Yala Safari borders.' },
-      { time: 'Day 5', title: 'Yala Leopard Safari & South Coast Drop-off', desc: 'Dawn 4x4 safari in Yala National Park, coastal drive via Mirissa/Galle or return to CMB Airport.' }
-    ]
-  },
-  {
-    id: 'multiday-7day',
-    category: 'multiday',
-    tag: 'Signature Expedition',
-    featured: false,
-    title: '7-Day Complete Island Grandeur: Rainforest to Reef',
-    duration: '7 Days / 6 Nights',
-    badge: 'Multi-Day',
-    image: 'assets/images/ocean.jpg',
-    basePriceUSD: 490,
-    description: 'An immersive grand tour: UNESCO cultural triangle, tea country, train journey, wildlife safari, and relaxing tropical beach stay in Mirissa/Bentota.',
-    inclusions: ['7 Days Full Vehicle & Chauffeur Service', 'English-speaking Tour Guide', 'All Vehicle Insurance & Tolls', '24/7 WhatsApp Hotline Support'],
-    itinerary: [
-      { time: 'Day 1', title: 'Arrival CMB -> Negombo Beach & Lagoon', desc: 'Airport greeting and leisure afternoon by the beach.' },
-      { time: 'Day 2', title: 'Negombo -> Sigiriya Rock & Village Safari', desc: 'Climb the iconic fortress and experience village lifestyle.' },
-      { time: 'Day 3', title: 'Sigiriya -> Kandy Temple of the Tooth', desc: 'Cultural dances, ancient sacred temple, and city walk.' },
-      { time: 'Day 4', title: 'Kandy -> Nuwara Eliya & Tea Highlands', desc: 'Visit tea factories, waterfalls, and golf green vistas.' },
-      { time: 'Day 5', title: 'Nuwara Eliya -> Ella Scenic Train & Hikes', desc: 'Scenic railway ride, Nine Arch Bridge, and mountain cafes.' },
-      { time: 'Day 6', title: 'Ella -> Yala Safari & Mirissa Coast', desc: 'Wildlife safari game drive and transfer to golden ocean shores.' },
-      { time: 'Day 7', title: 'Mirissa Whale Watching, Galle Fort -> CMB Airport', desc: 'Ocean cruise, historic Galle Fort walk, and highway transfer to departure flight.' }
+      { title: 'Lotus Tower', desc: 'Visit Sri Lanka’s iconic observation tower and enjoy panoramic city views.' },
+      { title: 'Red Mosque (Jami Ul-Alfar Mosque)', desc: 'Discover the famous red-and-white architectural landmark in Pettah.' },
+      { title: 'Independence Square', desc: 'Explore this important historical monument commemorating Sri Lanka’s independence.' },
+      { title: 'Hindu Kovil', desc: 'Visit a traditional Hindu temple and discover its colourful architecture.' },
+      { title: 'Gangaramaya Buddhist Temple', desc: 'Explore one of Colombo’s most famous Buddhist temples.' },
+      { title: 'Shopping Malls', desc: 'Enjoy shopping at some of Colombo’s popular shopping destinations.' }
     ]
   }
+];
+
+// Water Sports & Ocean Adventures
+const WATER_SPORTS = [
+  { icon: '🎣', image: 'assets/images/ocean.jpg', title: 'River Fishing Experience', desc: 'Enjoy a relaxing fishing experience along Sri Lanka’s beautiful rivers and lagoons using traditional or modern fishing methods.' },
+  { icon: '🐟', image: 'assets/videos/hero-beach-poster.jpg', title: 'Deep-Sea Fishing & Cooking Experience', desc: 'Experience an exciting fishing adventure in the Indian Ocean with experienced local fishermen. Try catching different varieties of ocean fish. After your fishing trip, enjoy a special cooking session where your freshly caught fish can be prepared and cooked, allowing you to experience authentic Sri Lankan flavours.' },
+  { icon: '🏄', image: 'assets/videos/hero-beach-poster.jpg', title: 'Surfing & Surfing Lessons', desc: 'Enjoy Sri Lanka’s beautiful waves, whether you are a beginner or an experienced surfer. Professional surfing lessons are available for beginners.' },
+  { icon: '🤿', image: 'assets/images/ocean.jpg', title: 'Snorkelling', desc: 'Explore the underwater world and discover colourful tropical fish, coral reefs and fascinating marine life.' },
+  { icon: '🐠', image: 'assets/images/ocean.jpg', title: 'Scuba Diving & Underwater Exploration', desc: 'Discover the beauty of the Indian Ocean through guided scuba diving experiences. Explore colourful coral reefs, fascinating marine life and underwater landscapes. Suitable options are available for beginners and certified divers.' },
+  { icon: '⚓', image: 'assets/images/ocean.jpg', title: 'Wreck Diving', desc: 'Explore fascinating underwater shipwrecks and discover marine life around these historic sites with qualified diving professionals.' },
+  { icon: '🌊', image: 'assets/videos/hero-beach-poster.jpg', title: 'Jet Ski Riding', desc: 'Enjoy an exciting high-speed adventure across the water on a jet ski while experiencing the beautiful coastal scenery.' },
+  { icon: '🛶', image: 'assets/images/ocean.jpg', title: 'Kayaking', desc: 'Explore beautiful rivers, lagoons and coastal waterways by kayak while enjoying Sri Lanka’s natural surroundings.' },
+  { icon: '🚤', image: 'assets/videos/hero-beach-poster.jpg', title: 'Glass-Bottom Boat Ride', desc: 'Discover the underwater beauty of Sri Lanka without getting into the water. Enjoy fascinating views of colourful fish, coral reefs and marine life through the glass bottom of a specially designed boat.' }
 ];
 
 // Document Ready Initialization
@@ -219,7 +315,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initTransportCalculator();
   renderTourCards('all');
   initTourFilters();
-  initToursSlider();
+  renderWaterSports();
+  refreshToursDots = initCardSlider('toursGrid', 'toursDots');
+  initCardSlider('waterSportsGrid', 'waterDots');
   initToursMegaMenu();
   initFaqAccordion();
   initMobileMenu();
@@ -323,7 +421,12 @@ function initTransportCalculator() {
       const pax = paxEl ? paxEl.value : '2';
       const quotePrice = document.getElementById('calcQuotePrice').textContent;
 
-      const message = `Hello NS Travel And Tours!\n\nI would like to book a private transfer:\n\n*Pickup:* ${pickup}\n*Drop-off:* ${dropoff}\n*Vehicle:* ${vehicle}\n*Date:* ${date} at ${time || 'Flexible'}\n*Passengers:* ${pax}\n*Estimated Rate:* ${quotePrice}\n\nPlease confirm availability and driver details. Thank you!`;
+      // Fields hidden on the page are left out of the message
+      const shown = (el) => el && el.closest('.input-box').style.display !== 'none';
+      const vehicleLine = shown(vehicleEl) ? `*Vehicle:* ${vehicle}\n` : '';
+      const paxLine = shown(paxEl) ? `*Passengers:* ${pax}\n` : '';
+
+      const message = `Hello NS Travel And Tours!\n\nI would like to book a private transfer:\n\n*Pickup:* ${pickup}\n*Drop-off:* ${dropoff}\n${vehicleLine}*Date:* ${date} at ${time || 'Flexible'}\n${paxLine}*Estimated Rate:* ${quotePrice}\n\nPlease confirm availability and driver details. Thank you!`;
 
       openWhatsApp(message);
     });
@@ -408,13 +511,22 @@ function renderToursMegaMenu() {
           <span class="mega-item-title">${tour.title}</span>
           <span class="mega-item-meta">${tour.duration}</span>
         </span>
-        <span class="mega-item-price">${formatPrice(tour.basePriceUSD)}</span>
+        ${tour.basePriceUSD == null ? '' : `<span class="mega-item-price">${formatPrice(tour.basePriceUSD)}</span>`}
       </button>
     </li>`;
 
-  const isMultiDay = (t) => t.category === '2day' || t.category === 'multiday';
-  dayList.innerHTML = TOURS.filter(t => !isMultiDay(t)).map(item).join('');
-  multiList.innerHTML = TOURS.filter(isMultiDay).map(item).join('');
+  dayList.innerHTML = TOURS.filter(t => t.category === 'halfday').map(item).join('');
+  multiList.innerHTML = TOURS.filter(t => t.category === '1day').map(item).join('');
+
+  const waterList = document.getElementById('megaWaterSports');
+  if (waterList) {
+    waterList.innerHTML = WATER_SPORTS.map((sport, i) => `
+      <li>
+        <button type="button" class="tours-mega-item mega-water-item" data-water-index="${i}">
+          <span class="mega-item-title">${sport.title}</span>
+        </button>
+      </li>`).join('');
+  }
 }
 
 function initToursMegaMenu() {
@@ -424,6 +536,18 @@ function initToursMegaMenu() {
   renderToursMegaMenu();
 
   mega.addEventListener('click', (e) => {
+    // Water activity: jump to the water sports section and slide to its card
+    const waterBtn = e.target.closest('.mega-water-item');
+    if (waterBtn) {
+      const section = document.getElementById('water-sports');
+      const grid = document.getElementById('waterSportsGrid');
+      const card = grid && grid.children[Number(waterBtn.dataset.waterIndex)];
+      if (section) section.scrollIntoView({ behavior: 'smooth' });
+      if (card) grid.scrollTo({ left: card.offsetLeft - grid.firstElementChild.offsetLeft, behavior: 'smooth' });
+      waterBtn.blur();
+      return;
+    }
+
     // Tour row: open its details popup
     const tourBtn = e.target.closest('.tours-mega-item');
     if (tourBtn) {
@@ -482,9 +606,11 @@ function renderTourCards(filter = 'all') {
           <span class="package-tag">${tour.tag}</span>
           <h3 class="package-title">${tour.title}</h3>
           <div class="package-price-row">
-            <span class="price-sub">From</span>
+            ${tour.basePriceUSD == null
+              ? '<span class="price-num">Price on request</span>'
+              : `<span class="price-sub">From</span>
             <span class="price-num">${formatPrice(tour.basePriceUSD)}</span>
-            <span class="price-sub">/ person</span>
+            <span class="price-sub">/ person</span>`}
           </div>
 
           <div class="package-reveal">
@@ -517,10 +643,10 @@ function renderTourCards(filter = 'all') {
 const TOURS_INTERVAL = 4500;
 let refreshToursDots = null;
 
-function initToursSlider() {
-  const track = document.getElementById('toursGrid');
-  const dots = document.getElementById('toursDots');
-  if (!track || !dots) return;
+function initCardSlider(trackId, dotsId) {
+  const track = document.getElementById(trackId);
+  const dots = document.getElementById(dotsId);
+  if (!track || !dots) return null;
 
   const slider = track.closest('.tours-slider');
   dots.style.setProperty('--slider-interval', `${TOURS_INTERVAL}ms`);
@@ -542,13 +668,13 @@ function initToursSlider() {
     Array.from(dots.children).forEach((dot, i) => dot.classList.toggle('active', i === index));
   };
 
-  refreshToursDots = () => {
+  const refreshDots = () => {
     dots.innerHTML = '';
     for (let i = 0; i < positions(); i++) {
       const dot = document.createElement('button');
       dot.type = 'button';
       dot.className = 'slider-dot';
-      dot.setAttribute('aria-label', `Go to tour ${i + 1}`);
+      dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
       dot.addEventListener('click', () => {
         track.scrollTo({ left: i * step(), behavior: 'smooth' });
         restart();
@@ -582,10 +708,10 @@ function initToursSlider() {
   let resizeTimer = null;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(refreshToursDots, 150);
+    resizeTimer = setTimeout(refreshDots, 150);
   });
 
-  refreshToursDots();
+  refreshDots();
 
   // Autoplay (skipped for reduced motion), paused on hover/focus/touch and when off-screen
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -627,6 +753,8 @@ function initToursSlider() {
       else stop();
     }, { threshold: 0.4 }).observe(slider);
   }
+
+  return refreshDots;
 }
 
 // Always-last card that invites visitors to build their own itinerary
@@ -655,6 +783,50 @@ const CUSTOM_TOUR_CARD = `
 `;
 
 /* ==========================================================================
+   WATER SPORTS
+   ========================================================================== */
+function renderWaterSports() {
+  const grid = document.getElementById('waterSportsGrid');
+  if (!grid) return;
+
+  // Same photo card as the tour packages, so both sliders look alike
+  grid.innerHTML = WATER_SPORTS.map((sport, i) => `
+    <article class="package-card">
+      <img src="${sport.image}" alt="${sport.title}" class="package-img" loading="lazy">
+      <div class="package-shade"></div>
+      <div class="package-duration-pill">
+        <span>${sport.icon} Water Activity</span>
+      </div>
+
+      <div class="package-body">
+        <span class="package-tag">Water Sports &amp; Ocean</span>
+        <h3 class="package-title">${sport.title}</h3>
+        <div class="package-price-row">
+          <span class="price-num">Price on request</span>
+        </div>
+
+        <div class="package-reveal">
+          <div class="package-reveal-inner">
+            <p class="package-summary">${sport.desc}</p>
+            <div class="package-actions">
+              <button class="btn-card-wa" onclick="bookWaterSportWhatsApp(${i})">
+                <span><svg class="wa-icon" aria-hidden="true"><use href="#icon-whatsapp"></use></svg> Enquire</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  `).join('');
+}
+
+function bookWaterSportWhatsApp(index) {
+  const sport = WATER_SPORTS[index];
+  if (!sport) return;
+  openWhatsApp(`Hello NS Travel And Tours!\n\nI am interested in this water activity:\n\n*Activity:* ${sport.title}\n\nPlease share availability, price and details. Thank you!`);
+}
+
+/* ==========================================================================
    ITINERARY MODAL
    ========================================================================== */
 function openTourModal(tourId) {
@@ -675,12 +847,14 @@ function openTourModal(tourId) {
   if (modalTitle) modalTitle.textContent = tour.title;
   if (modalCategory) modalCategory.textContent = tour.tag;
   if (modalDuration) modalDuration.textContent = `⏱️ ${tour.duration}`;
-  if (modalPrice) modalPrice.textContent = `${formatPrice(tour.basePriceUSD)} (All-inclusive)`;
+  if (modalPrice) modalPrice.textContent = tour.basePriceUSD == null
+    ? 'Price on request'
+    : `${formatPrice(tour.basePriceUSD)} (All-inclusive)`;
 
   if (modalTimeline) {
-    modalTimeline.innerHTML = tour.itinerary.map(step => `
+    modalTimeline.innerHTML = tour.itinerary.map((step, i) => `
       <div class="timeline-row">
-        <span class="timeline-time-badge">${step.time}</span>
+        <span class="timeline-time-badge">${step.time || `Stop ${i + 1}`}</span>
         <h4 class="timeline-title-text">${step.title}</h4>
         <p class="timeline-desc-text">${step.desc}</p>
       </div>
@@ -718,8 +892,8 @@ function bookTourWhatsApp(tourId) {
   const tour = TOURS.find(t => t.id === tourId);
   if (!tour) return;
 
-  const price = formatPrice(tour.basePriceUSD);
-  const message = `Hello NS Travel And Tours!\n\nI would like to book this tour package:\n\n*Tour:* ${tour.title}\n*Duration:* ${tour.duration}\n*Price:* From ${price} / person\n\nPlease let me know availability and pickup options. Thank you!`;
+  const priceLine = tour.basePriceUSD == null ? '' : `*Price:* From ${formatPrice(tour.basePriceUSD)} / person\n`;
+  const message = `Hello NS Travel And Tours!\n\nI would like to book this tour package:\n\n*Tour:* ${tour.title}\n*Duration:* ${tour.duration}\n${priceLine}\nPlease let me know availability, price and pickup options. Thank you!`;
 
   openWhatsApp(message);
 }
