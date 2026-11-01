@@ -535,10 +535,38 @@ function initToursMegaMenu() {
 
   renderToursMegaMenu();
 
+  const megaLi = mega.closest('.nav-has-mega');
+  const megaTrigger = megaLi ? megaLi.querySelector('.nav-link') : null;
+
+  if (megaLi && megaTrigger) {
+    megaTrigger.addEventListener('click', (e) => {
+      if (window.innerWidth > 768) {
+        if (!megaLi.classList.contains('is-open')) {
+          e.preventDefault();
+          megaLi.classList.add('is-open');
+        }
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!megaLi.contains(e.target)) {
+        megaLi.classList.remove('is-open');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && megaLi.classList.contains('is-open')) {
+        megaLi.classList.remove('is-open');
+        megaTrigger.focus();
+      }
+    });
+  }
+
   mega.addEventListener('click', (e) => {
     // Water activity: jump to the water sports section and slide to its card
     const waterBtn = e.target.closest('.mega-water-item');
     if (waterBtn) {
+      if (megaLi) megaLi.classList.remove('is-open');
       const section = document.getElementById('water-sports');
       const grid = document.getElementById('waterSportsGrid');
       const card = grid && grid.children[Number(waterBtn.dataset.waterIndex)];
@@ -551,6 +579,7 @@ function initToursMegaMenu() {
     // Tour row: open its details popup
     const tourBtn = e.target.closest('.tours-mega-item');
     if (tourBtn) {
+      if (megaLi) megaLi.classList.remove('is-open');
       openTourModal(tourBtn.dataset.tourId);
       tourBtn.blur();
       return;
@@ -559,6 +588,7 @@ function initToursMegaMenu() {
     // Quick filter link: apply the matching filter on the tours section
     const filterLink = e.target.closest('[data-menu-filter]');
     if (filterLink) {
+      if (megaLi) megaLi.classList.remove('is-open');
       const pill = document.querySelector(`.filter-pill-btn[data-filter="${filterLink.dataset.menuFilter}"]`);
       if (pill) pill.click();
       filterLink.blur();
