@@ -188,6 +188,10 @@ button, input, select, textarea {
   gap: 22px;
 }
 
+.mobile-nav-only {
+  display: none;
+}
+
 .nav-link {
   font-size: 0.88rem;
   font-weight: 600;
@@ -3496,6 +3500,9 @@ body::before {
   .tours-mega,
   .nav-caret {
     display: none;
+  }
+  .mobile-nav-only {
+    display: list-item;
   }
   .nav-menu-currency {
     display: flex;
