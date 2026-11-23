@@ -2644,7 +2644,7 @@ button, input, select, textarea {
   position: relative;
   background: #0B1120;
   color: #94A3B8;
-  padding: 60px 0 24px;
+  padding: 60px 0 28px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -2722,11 +2722,31 @@ button, input, select, textarea {
   padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  text-align: center;
   align-items: center;
   font-size: 0.78rem;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+/* Web designer credit, centred under the copyright row */
+.footer-credit {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #94A3B8;
+}
+
+.footer-credit a {
+  color: #FBBF24;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.footer-credit a:hover {
+  color: #FFFFFF;
+  text-decoration: underline;
 }
 
 /* --------------------------------------------------------------------------
@@ -3767,6 +3787,11 @@ body::before {
     opacity: 1;
     visibility: visible;
     transform: none;
+  }
+  /* Room under the centred copyright lines for the round WhatsApp button
+     (48px, 22px from the bottom), which would otherwise cover them */
+  .footer-wrap {
+    padding-bottom: 76px;
   }
   .btn-header-book {
     padding: 8px 14px;
