@@ -184,16 +184,16 @@
         <!-- Pinwheel photo collage: six destinations around a central logo tile -->
         <div class="about-collage">
           <figure class="collage-tile tile-sigiriya">
-            <img src="assets/images/sigiriya.jpg" alt="Sigiriya Lion Rock" loading="lazy">
+            <img src="assets/images/sigiriya.jpg" alt="Sigiriya Lion Rock" loading="lazy" decoding="async">
           </figure>
           <figure class="collage-tile tile-ocean">
-            <img src="assets/images/ocean.jpg" alt="Sri Lanka south coast beach" loading="lazy">
+            <img src="assets/images/ocean.jpg" alt="Sri Lanka south coast beach" loading="lazy" decoding="async">
           </figure>
           <figure class="collage-tile tile-galle">
-            <img src="assets/images/galle.jpg" alt="Galle Fort lighthouse" loading="lazy">
+            <img src="assets/images/galle.jpg" alt="Galle Fort lighthouse" loading="lazy" decoding="async">
           </figure>
           <figure class="collage-tile tile-ella">
-            <img src="assets/images/hero.jpg" alt="Ella hill country and Nine Arch Bridge" loading="lazy">
+            <img src="assets/images/hero.jpg" alt="Ella hill country and Nine Arch Bridge" loading="lazy" decoding="async">
           </figure>
 
           <div class="collage-center">
@@ -205,10 +205,10 @@
           </div>
 
           <figure class="collage-tile tile-safari">
-            <img src="assets/images/safari.jpg" alt="Wild elephants on safari" loading="lazy">
+            <img src="assets/images/safari.jpg" alt="Wild elephants on safari" loading="lazy" decoding="async">
           </figure>
           <figure class="collage-tile tile-fleet">
-            <img src="assets/images/fleet.jpg" alt="NS Travel And Tours private vehicles" loading="lazy">
+            <img src="assets/images/fleet.jpg" alt="NS Travel And Tours private vehicles" loading="lazy" decoding="async">
           </figure>
         </div>
       </div>
@@ -313,9 +313,9 @@
       </div>
 
       <!-- Tours Cards Slider -->
-      <div class="tours-slider">
+      <div class="tours-slider tours-slider-3d">
         <button type="button" class="slider-btn slider-prev" aria-label="Previous tours">‹</button>
-        <div class="tours-card-grid" id="toursGrid">
+        <div class="tours-coverflow" id="toursGrid" tabindex="0" aria-roledescription="carousel" aria-label="Tour packages">
           <!-- Rendered dynamically by app.js -->
         </div>
         <button type="button" class="slider-btn slider-next" aria-label="Next tours">›</button>
@@ -336,9 +336,9 @@
       </div>
 
       <!-- Water Sports Cards Slider -->
-      <div class="tours-slider">
+      <div class="tours-slider tours-slider-3d">
         <button type="button" class="slider-btn slider-prev" aria-label="Previous water activities">‹</button>
-        <div class="tours-card-grid" id="waterSportsGrid">
+        <div class="tours-coverflow" id="waterSportsGrid" tabindex="0" aria-roledescription="carousel" aria-label="Water sports and ocean adventures">
           <!-- Rendered dynamically by app.js -->
         </div>
         <button type="button" class="slider-btn slider-next" aria-label="Next water activities">›</button>
@@ -542,9 +542,9 @@
       <!-- Routes Filter & Search Toolbar -->
       <div class="routes-toolbar">
         <div class="routes-filter-tabs">
-          <button type="button" class="route-tab-btn active" data-filter="all">All Transfers <span class="tab-badge">51</span></button>
-          <button type="button" class="route-tab-btn" data-filter="bia">✈️ From BIA Airport <span class="tab-badge">24</span></button>
-          <button type="button" class="route-tab-btn" data-filter="colombo">🏙️ From Colombo <span class="tab-badge">27</span></button>
+          <button type="button" class="route-tab-btn active" data-filter="all"><span class="tab-label">All<span class="tab-long"> Transfers</span></span> <span class="tab-badge">51</span></button>
+          <button type="button" class="route-tab-btn" data-filter="bia"><span class="tab-label">✈️ <span class="tab-long">From </span>BIA Airport</span> <span class="tab-badge">24</span></button>
+          <button type="button" class="route-tab-btn" data-filter="colombo"><span class="tab-label">🏙️ <span class="tab-long">From </span>Colombo</span> <span class="tab-badge">27</span></button>
         </div>
         <div class="routes-search-box">
           <span class="search-icon" aria-hidden="true">🔍</span>
@@ -1843,6 +1843,10 @@
           </tbody>
         </table>
       </div>
+      <!-- Long route list is cut short; app.js fills and shows this button -->
+      <div class="routes-more-row">
+        <button type="button" class="routes-more-btn" id="routesMoreBtn" aria-controls="routesTable" hidden></button>
+      </div>
     </div>
   </section>
 
@@ -1916,7 +1920,7 @@
         <button type="button" class="slider-btn slider-prev" aria-label="Previous photos">‹</button>
         <div class="gallery-track" id="galleryTrack">
           <figure class="gallery-slide" data-gallery data-type="image" data-src="assets/images/sigiriya.jpg" tabindex="0" aria-label="View photo: Sigiriya Lion Rock at sunrise">
-            <img src="assets/images/sigiriya.jpg" alt="Sigiriya Lion Rock at sunrise" loading="lazy">
+            <img src="assets/images/sigiriya.jpg" alt="Sigiriya Lion Rock at sunrise" loading="lazy" decoding="async">
             <figcaption>Sigiriya Lion Rock at sunrise</figcaption>
           </figure>
           <figure class="gallery-slide" data-gallery data-type="video" data-src="assets/videos/hero-train.mp4" tabindex="0" aria-label="Play video: Blue train crossing the Nine Arch Bridge, Ella">
@@ -1925,11 +1929,11 @@
             <figcaption>Blue train crossing the Nine Arch Bridge, Ella</figcaption>
           </figure>
           <figure class="gallery-slide" data-gallery data-type="image" data-src="assets/images/galle.jpg" tabindex="0" aria-label="View photo: Galle Dutch Fort & lighthouse">
-            <img src="assets/images/galle.jpg" alt="Galle Dutch Fort & lighthouse" loading="lazy">
+            <img src="assets/images/galle.jpg" alt="Galle Dutch Fort & lighthouse" loading="lazy" decoding="async">
             <figcaption>Galle Dutch Fort & lighthouse</figcaption>
           </figure>
           <figure class="gallery-slide" data-gallery data-type="image" data-src="assets/images/safari.jpg" tabindex="0" aria-label="View photo: Wild elephants on safari">
-            <img src="assets/images/safari.jpg" alt="Wild elephants on safari" loading="lazy">
+            <img src="assets/images/safari.jpg" alt="Wild elephants on safari" loading="lazy" decoding="async">
             <figcaption>Wild elephants on safari</figcaption>
           </figure>
           <figure class="gallery-slide" data-gallery data-type="video" data-src="assets/videos/hero-beach.mp4" tabindex="0" aria-label="Play video: Golden hour over Mirissa beach">
@@ -1938,7 +1942,7 @@
             <figcaption>Golden hour over Mirissa beach</figcaption>
           </figure>
           <figure class="gallery-slide" data-gallery data-type="image" data-src="assets/images/ocean.jpg" tabindex="0" aria-label="View photo: Turquoise bays of the south coast">
-            <img src="assets/images/ocean.jpg" alt="Turquoise bays of the south coast" loading="lazy">
+            <img src="assets/images/ocean.jpg" alt="Turquoise bays of the south coast" loading="lazy" decoding="async">
             <figcaption>Turquoise bays of the south coast</figcaption>
           </figure>
         </div>

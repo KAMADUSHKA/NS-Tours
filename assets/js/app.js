@@ -341,8 +341,8 @@ document.addEventListener('DOMContentLoaded', () => {
   renderTourCards('all');
   initTourFilters();
   renderWaterSports();
-  refreshToursDots = initCardSlider('toursGrid', 'toursDots');
-  initCardSlider('waterSportsGrid', 'waterDots');
+  refreshToursDots = initCoverflow('toursGrid', 'toursDots');
+  initCoverflow('waterSportsGrid', 'waterDots');
   initToursMegaMenu();
   initFaqAccordion();
   initMobileMenu();
@@ -550,25 +550,49 @@ function updateRouteTablePrices() {
   });
 }
 
+// Routes shown before "Show all": the full list (51) is very long, on
+// phones especially, where each route is its own card
+const ROUTES_PREVIEW_PHONE = 6;
+const ROUTES_PREVIEW_DESKTOP = 10;
+
 function initRouteTableFilters() {
   const tabs = document.querySelectorAll('.route-tab-btn');
   const searchInput = document.getElementById('routeSearchInput');
   const rows = document.querySelectorAll('.route-row');
+  const moreBtn = document.getElementById('routesMoreBtn');
+  const section = document.getElementById('routes');
+  const phoneView = window.matchMedia('(max-width: 768px)');
 
   let activeOrigin = 'all';
   let searchTerm = '';
+  let expanded = false;
 
   function applyFilter() {
-    rows.forEach(row => {
+    const matches = Array.from(rows).filter(row => {
       const origin = row.dataset.origin;
       const dest = (row.dataset.dest || '').toLowerCase();
       const originName = (row.dataset.from || '').toLowerCase();
 
       const matchesOrigin = activeOrigin === 'all' || origin === activeOrigin;
       const matchesSearch = !searchTerm || dest.includes(searchTerm) || originName.includes(searchTerm);
-
-      row.style.display = (matchesOrigin && matchesSearch) ? '' : 'none';
+      return matchesOrigin && matchesSearch;
     });
+
+    // A search shows every match; otherwise only a preview until expanded
+    const limit = phoneView.matches ? ROUTES_PREVIEW_PHONE : ROUTES_PREVIEW_DESKTOP;
+    const showAll = expanded || searchTerm !== '';
+    const visible = new Set(showAll ? matches : matches.slice(0, limit));
+    rows.forEach(row => {
+      row.style.display = visible.has(row) ? '' : 'none';
+    });
+
+    if (!moreBtn) return;
+    const hasMore = !searchTerm && matches.length > limit;
+    moreBtn.hidden = !hasMore;
+    moreBtn.setAttribute('aria-expanded', String(expanded));
+    moreBtn.textContent = expanded
+      ? 'Show fewer routes ↑'
+      : `Show all ${matches.length} routes (${matches.length - limit} more) ↓`;
   }
 
   tabs.forEach(tab => {
@@ -576,6 +600,7 @@ function initRouteTableFilters() {
       tabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       activeOrigin = tab.dataset.filter;
+      expanded = false;
       applyFilter();
     });
   });
@@ -586,6 +611,18 @@ function initRouteTableFilters() {
       applyFilter();
     });
   }
+
+  if (moreBtn) {
+    moreBtn.addEventListener('click', () => {
+      expanded = !expanded;
+      applyFilter();
+      // Collapsing removes a long stretch of page: bring the visitor back up
+      if (!expanded && section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  phoneView.addEventListener('change', applyFilter);
+  applyFilter();
 }
 
 function bookTransferRoute(origin, dest, vehicle, lkr) {
@@ -676,9 +713,8 @@ function initToursMegaMenu() {
       if (megaLi) megaLi.classList.remove('is-open');
       const section = document.getElementById('water-sports');
       const grid = document.getElementById('waterSportsGrid');
-      const card = grid && grid.children[Number(waterBtn.dataset.waterIndex)];
       if (section) section.scrollIntoView({ behavior: 'smooth' });
-      if (card) grid.scrollTo({ left: card.offsetLeft - grid.firstElementChild.offsetLeft, behavior: 'smooth' });
+      if (grid && grid.coverflowGo) grid.coverflowGo(Number(waterBtn.dataset.waterIndex));
       waterBtn.blur();
       return;
     }
@@ -715,8 +751,6 @@ function initTourFilters() {
       buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       renderTourCards(btn.dataset.filter);
-      const grid = document.getElementById('toursGrid');
-      if (grid) grid.scrollTo({ left: 0, behavior: 'auto' });
     });
   });
 }
@@ -772,86 +806,195 @@ function renderTourCards(filter = 'all') {
   if (refreshToursDots) refreshToursDots();
 }
 
-/* ==========================================================================
-   TOURS SLIDER
-   The card grid scrolls sideways with snap points; arrows step one card,
-   dots jump to a position, and autoplay advances every TOURS_INTERVAL.
-   ========================================================================== */
+// Autoplay interval shared by the 3D sliders (tours and water sports)
 const TOURS_INTERVAL = 4500;
 let refreshToursDots = null;
 
-function initCardSlider(trackId, dotsId) {
+/* ==========================================================================
+   TOURS 3D COVERFLOW
+   The active card faces forward in the centre; its neighbours angle back in
+   3D on each side and fade with distance. Loops endlessly in both directions.
+   Arrows, dots, autoplay, swipe, keyboard arrows and clicking a side card
+   all move it.
+   ========================================================================== */
+function initCoverflow(trackId, dotsId) {
   const track = document.getElementById(trackId);
   const dots = document.getElementById(dotsId);
   if (!track || !dots) return null;
 
   const slider = track.closest('.tours-slider');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   dots.style.setProperty('--slider-interval', `${TOURS_INTERVAL}ms`);
 
-  const step = () => {
-    const card = track.firstElementChild;
-    const gap = parseFloat(getComputedStyle(track).columnGap) || 26;
-    return card ? card.offsetWidth + gap : track.clientWidth;
+  let active = 0;
+  const cards = () => Array.from(track.children);
+
+  // Shortest signed distance from position `from` to `to` on a ring of n cards
+  const ringOffset = (to, from, n) => {
+    let d = ((to - from) % n + n) % n;
+    if (d > n / 2) d -= n;
+    return d;
   };
 
-  // One dot per reachable start position (cards minus those already in view)
-  const positions = () => {
-    const perView = Math.max(1, Math.round(track.clientWidth / step()));
-    return Math.max(1, track.children.length - perView + 1);
+  // Offsets for every card. The "Design your own" card is last in the list;
+  // the loop would otherwise show it just left of the first tour, so while it
+  // sits on the left of the active card it is left out of the ring (hidden)
+  // and only appears when the visitor reaches the end of the tours.
+  const offsets = (list) => {
+    const n = list.length;
+    const last = list[n - 1];
+    const lastD = ringOffset(n - 1, active, n);
+    const hideLast = last && last.classList.contains('custom-tour-card') && lastD < 0 && n > 2;
+    if (!hideLast) return list.map((_, i) => ({ d: ringOffset(i, active, n), hidden: false }));
+    return list.map((_, i) => (i === n - 1
+      ? { d: lastD, hidden: true }
+      : { d: ringOffset(i, active, n - 1), hidden: false }));
   };
 
-  const updateActive = () => {
-    const index = Math.round(track.scrollLeft / step());
-    Array.from(dots.children).forEach((dot, i) => dot.classList.toggle('active', i === index));
+  // Wide screens show three full cards (centre + one each side);
+  // phones show one card with its neighbours peeking in at the edges
+  const wideView = window.matchMedia('(min-width: 901px)');
+
+  const layout = () => {
+    const list = cards();
+    const wide = wideView.matches;
+    const placed = offsets(list);
+    list.forEach((card, i) => {
+      const { d, hidden } = placed[i];
+      const abs = Math.min(Math.abs(d), 4);
+      const sign = Math.sign(d);
+      // Percentages are of the card's own width, so spacing scales with it
+      let x, z, rotate, opacity;
+      if (wide) {
+        // Centre card, a full card each side, then two more per side
+        // stepping further back into the scene
+        const X = [0, 100, 158, 200, 230];
+        const Z = [0, -160, -360, -520, -640];
+        const R = [0, 18, 40, 45, 45];
+        const O = [1, 1, 0.8, 0.5, 0];
+        x = sign * X[abs];
+        z = Z[abs];
+        rotate = -sign * R[abs];
+        opacity = O[abs];
+      } else {
+        // Phones: the front card fills most of the view; each neighbour
+        // tilts back with its outer edge on screen so the 3D angle shows
+        const X = [0, 38, 50, 50, 50];
+        const Z = [0, -160, -320, -320, -320];
+        const R = [0, 55, 60, 60, 60];
+        x = sign * X[abs];
+        z = Z[abs];
+        rotate = -sign * R[abs];
+        opacity = abs >= 2 ? 0 : 1;
+      }
+      card.style.setProperty('--cf-x', `${x}%`);
+      card.style.setProperty('--cf-z', `${z}px`);
+      card.style.setProperty('--cf-r', `${rotate}deg`);
+      card.style.setProperty('--cf-layer', String(10 - abs));
+      if (hidden) opacity = 0;
+      card.style.opacity = String(opacity);
+      card.style.visibility = opacity === 0 ? 'hidden' : 'visible';
+      card.classList.toggle('is-active', d === 0);
+      // Wide screens: the centre card and both neighbours are fully usable
+      card.classList.toggle('is-near', !hidden && (d === 0 || (wide && abs === 1)));
+    });
+    Array.from(dots.children).forEach((dot, i) => {
+      dot.classList.toggle('active', i === active);
+      dot.setAttribute('aria-current', i === active ? 'true' : 'false');
+    });
   };
 
-  const refreshDots = () => {
+  const go = (i) => {
+    const n = cards().length;
+    if (!n) return;
+    active = ((i % n) + n) % n;
+    layout();
+    restart();
+  };
+  const goNext = () => go(active + 1);
+  const goPrev = () => go(active - 1);
+
+  // Called after the filter re-renders the cards: back to the first card
+  const refresh = () => {
+    active = 0;
     dots.innerHTML = '';
-    for (let i = 0; i < positions(); i++) {
+    cards().forEach((_, i) => {
       const dot = document.createElement('button');
       dot.type = 'button';
       dot.className = 'slider-dot';
-      dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
-      dot.addEventListener('click', () => {
-        track.scrollTo({ left: i * step(), behavior: 'smooth' });
-        restart();
-      });
+      dot.setAttribute('aria-label', `Go to tour ${i + 1}`);
+      dot.addEventListener('click', () => go(i));
       dots.appendChild(dot);
-    }
-    updateActive();
+    });
+    layout();
+    track.classList.remove('is-entering');
+    void track.offsetWidth; // restart the fade-in animation
+    track.classList.add('is-entering');
   };
 
-  const atEnd = () => track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+  slider.querySelector('.slider-next').addEventListener('click', goNext);
+  slider.querySelector('.slider-prev').addEventListener('click', goPrev);
 
-  const goNext = () => {
-    if (atEnd()) track.scrollTo({ left: 0, behavior: 'smooth' });
-    else track.scrollBy({ left: step(), behavior: 'smooth' });
+  // Phones hide the big side arrows, so a small ‹ › pair sits beside the dots
+  const nav = document.createElement('div');
+  nav.className = 'slider-nav';
+  dots.parentNode.insertBefore(nav, dots);
+  const navButton = (label, text, action) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'slider-nav-btn';
+    btn.setAttribute('aria-label', label);
+    btn.textContent = text;
+    btn.addEventListener('click', action);
+    return btn;
   };
+  nav.append(
+    navButton(slider.querySelector('.slider-prev').getAttribute('aria-label'), '‹', goPrev),
+    dots,
+    navButton(slider.querySelector('.slider-next').getAttribute('aria-label'), '›', goNext)
+  );
+  track.coverflowGo = go; // lets the mega menu jump straight to a card
+  wideView.addEventListener('change', layout);
 
-  const goPrev = () => {
-    if (track.scrollLeft <= 4) track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
-    else track.scrollBy({ left: -step(), behavior: 'smooth' });
-  };
+  // A click on a card's photo (or anywhere on a card further back) brings it to the front
+  track.addEventListener('click', (e) => {
+    const card = e.target.closest('.package-card');
+    if (!card || card.classList.contains('is-active')) return;
+    // Buttons and links on the three front cards work straight away
+    if (card.classList.contains('is-near') && e.target.closest('button, a')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    go(cards().indexOf(card));
+  }, true);
 
-  slider.querySelector('.slider-next').addEventListener('click', () => { goNext(); restart(); });
-  slider.querySelector('.slider-prev').addEventListener('click', () => { goPrev(); restart(); });
-
-  let scrollTick = null;
-  track.addEventListener('scroll', () => {
-    cancelAnimationFrame(scrollTick);
-    scrollTick = requestAnimationFrame(updateActive);
-  }, { passive: true });
-
-  let resizeTimer = null;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(refreshDots, 150);
+  // Tabbing into a card further back brings that card to the front
+  track.addEventListener('focusin', (e) => {
+    const card = e.target.closest('.package-card');
+    if (card && !card.classList.contains('is-near')) go(cards().indexOf(card));
   });
 
-  refreshDots();
+  slider.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); goNext(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); goPrev(); }
+  });
+
+  // Swipe on touch screens
+  let touchX = null;
+  track.addEventListener('touchstart', (e) => {
+    touchX = e.touches[0].clientX;
+    pause();
+  }, { passive: true });
+  track.addEventListener('touchend', (e) => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    touchX = null;
+    if (Math.abs(dx) > 40) {
+      if (dx < 0) goNext();
+      else goPrev();
+    }
+  });
 
   // Autoplay (skipped for reduced motion), paused on hover/focus/touch and when off-screen
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let timer = null;
   let inViewport = false;
   let paused = false;
@@ -871,8 +1014,7 @@ function initCardSlider(trackId, dotsId) {
     stop();
     start();
   }
-
-  const pause = () => { paused = true; stop(); };
+  function pause() { paused = true; stop(); }
   const resume = () => { paused = false; start(); };
 
   slider.addEventListener('mouseenter', pause);
@@ -881,7 +1023,6 @@ function initCardSlider(trackId, dotsId) {
   slider.addEventListener('focusout', (e) => {
     if (!slider.contains(e.relatedTarget)) resume();
   });
-  track.addEventListener('touchstart', pause, { passive: true });
 
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(([entry]) => {
@@ -891,7 +1032,8 @@ function initCardSlider(trackId, dotsId) {
     }, { threshold: 0.4 }).observe(slider);
   }
 
-  return refreshDots;
+  refresh();
+  return refresh;
 }
 
 // Always-last card that invites visitors to build their own itinerary
@@ -1160,7 +1302,10 @@ function initScrollAnimations() {
       entry.target.classList.add('is-visible');
       observer.unobserve(entry.target);
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  // Reveal once the element's top edge is 10% up the screen. (A ratio
+  // threshold such as 0.12 never fires for very tall elements, e.g. the
+  // routes list on phones, which is taller than 8 screens.)
+  }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
 
   REVEAL_GROUPS.forEach(([selector, direction, stagger]) => {
     document.querySelectorAll(selector).forEach(el => {

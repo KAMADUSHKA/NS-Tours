@@ -1457,33 +1457,22 @@ button, input, select, textarea {
   border-color: var(--dark);
 }
 
-/* Tours slider: a horizontal scroll-snap track with arrows, dots and autoplay */
+/* Small phones: keep the three filter tabs on one line */
+@media (max-width: 480px) {
+  .filter-tabs-row {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+  .filter-pill-btn {
+    padding: 7px 12px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+}
+
+/* Card sliders (tours, water sports): a 3D coverflow with arrows, dots and autoplay */
 .tours-slider {
   position: relative;
-}
-
-.tours-card-grid {
-  --per-view: 3;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: calc((100% - (var(--per-view) - 1) * 26px) / var(--per-view));
-  gap: 26px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  overscroll-behavior-x: contain;
-  scrollbar-width: none;
-  /* Room for the hover lift and shadow, which overflow would otherwise clip */
-  padding: 10px 0 30px;
-  margin: -10px 0 -30px;
-}
-
-.tours-card-grid::-webkit-scrollbar {
-  display: none;
-}
-
-.tours-card-grid > .package-card {
-  scroll-snap-align: start;
 }
 
 /* Arrows and dots reuse the gallery slider styles (.slider-btn, .slider-dots) */
@@ -1492,9 +1481,215 @@ button, input, select, textarea {
   margin-top: -24px;
 }
 
-#toursDots,
-#waterDots {
+/* Dots row under each 3D slider, with small ‹ › buttons on phones */
+.slider-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   margin-top: 24px;
+}
+
+.slider-nav .slider-dots {
+  margin-top: 0;
+}
+
+.slider-nav-btn {
+  display: none; /* desktop uses the big side arrows */
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0 2px;
+  border-radius: 50%;
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--dark);
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.14);
+  transition: var(--transition);
+}
+
+.slider-nav-btn:hover,
+.slider-nav-btn:active {
+  background: var(--primary);
+  color: #FFFFFF;
+}
+
+@media (max-width: 768px) {
+  .slider-nav-btn {
+    display: flex;
+  }
+}
+
+/* 3D coverflow (tours, water sports): cards are stacked in the centre and app.js
+   (initCoverflow) sets each one's 3D position around the active card */
+#tours,
+#water-sports {
+  overflow-x: clip; /* side cards reach past the container edges */
+}
+
+.tours-coverflow {
+  position: relative;
+  height: 480px;
+  perspective: 1400px;
+  touch-action: pan-y;
+  outline: none;
+}
+
+.tours-coverflow:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 6px;
+  border-radius: var(--radius-lg);
+}
+
+.tours-coverflow > .package-card {
+  --card-w: min(400px, 78vw);
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: var(--card-w);
+  height: 460px;
+  min-height: 0;
+  margin-left: calc(var(--card-w) / -2);
+  cursor: pointer;
+  animation: none;
+  /* Position comes from app.js as custom properties, so :hover can adjust it */
+  transform: translateX(var(--cf-x, 0%)) translateZ(var(--cf-z, 0px)) rotateY(var(--cf-r, 0deg));
+  z-index: var(--cf-layer, 1);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+  transition:
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.5s ease,
+    visibility 0.5s ease,
+    box-shadow 0.5s ease;
+  will-change: transform;
+}
+
+/* The three front cards are fully usable: hover opens their details */
+.tours-coverflow > .package-card.is-near {
+  cursor: default;
+  box-shadow: 0 26px 54px rgba(15, 23, 42, 0.26);
+}
+
+/* Keep the 3D position on hover (the generic card hover lift would replace it) */
+.tours-coverflow > .package-card:hover {
+  transform: translateX(var(--cf-x, 0%)) translateZ(var(--cf-z, 0px)) rotateY(var(--cf-r, 0deg));
+}
+
+/* A hovered side card turns to face the visitor and steps forward */
+.tours-coverflow > .package-card.is-near:not(.is-active):hover,
+.tours-coverflow > .package-card.is-near:not(.is-active):focus-within {
+  transform: translateX(var(--cf-x, 0%)) translateZ(calc(var(--cf-z, 0px) + 120px)) rotateY(0deg);
+  z-index: 20;
+  transition-duration: 0.45s;
+}
+
+/* Three cards across on wide screens: size them to fit the container */
+@media (min-width: 901px) {
+  .tours-coverflow > .package-card {
+    --card-w: min(340px, 27vw);
+  }
+}
+
+/* Cards further back sit in shadow; the three front cards are fully lit */
+.tours-coverflow > .package-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(15, 23, 42, 0.3);
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.tours-coverflow > .package-card.is-near::after {
+  opacity: 0;
+}
+
+/* Cards further back don't zoom or open their details */
+.tours-coverflow > .package-card:not(.is-near) .package-reveal {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+.tours-coverflow > .package-card:not(.is-near):hover .package-img {
+  transform: none;
+}
+
+/* Background cards show only their photo: text cut off by neighbouring
+   cards or the screen edge would read as broken words */
+.tours-coverflow > .package-card .package-body,
+.tours-coverflow > .package-card .package-duration-pill,
+.tours-coverflow > .package-card .package-badge-top,
+.tours-coverflow > .package-card .custom-tour-inner {
+  transition: opacity 0.4s ease;
+}
+
+.tours-coverflow > .package-card:not(.is-near) .package-body,
+.tours-coverflow > .package-card:not(.is-near) .package-duration-pill,
+.tours-coverflow > .package-card:not(.is-near) .package-badge-top,
+.tours-coverflow > .package-card:not(.is-near) .custom-tour-inner {
+  opacity: 0;
+}
+
+/* Phones: a stronger perspective and a slightly narrower front card, so the
+   side cards' angled outer edges stay on screen and read clearly as 3D */
+@media (max-width: 900px) {
+  .tours-coverflow {
+    height: 450px;
+    perspective: 700px;
+  }
+  .tours-coverflow > .package-card {
+    --card-w: min(320px, 72vw);
+    height: 430px;
+  }
+  .tours-coverflow > .package-card::after {
+    background: rgba(15, 23, 42, 0.3);
+  }
+}
+
+/* Touch screens hide the summary; water cards have no inclusion tags, so
+   give their Enquire button its own gap below the price */
+@media (hover: none) {
+  .package-summary + .package-actions {
+    margin-top: 12px;
+  }
+}
+
+.tours-coverflow .custom-tour-inner {
+  padding: 24px;
+}
+
+/* Solid instead of glass, so cards stacked behind don't show through */
+.tours-coverflow > .custom-tour-card {
+  background:
+    radial-gradient(70% 60% at 100% 0%, rgba(251, 191, 36, 0.35) 0%, transparent 70%),
+    radial-gradient(60% 60% at 0% 100%, rgba(20, 184, 166, 0.25) 0%, transparent 70%),
+    #FBF8F2;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.tours-coverflow.is-entering {
+  animation: coverflowIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes coverflowIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tours-coverflow > .package-card {
+    transition-duration: 0.01s;
+  }
+  .tours-coverflow.is-entering {
+    animation: none;
+  }
 }
 
 /* Full-photo card: the image fills the card, details sit on a glass panel */
@@ -2826,6 +3021,36 @@ button, input, select, textarea {
 .slider-prev { left: -22px; }
 .slider-next { right: -22px; }
 
+/* "Show all routes" toggle under the transfers table */
+.routes-more-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 22px;
+}
+
+.routes-more-btn {
+  padding: 12px 26px;
+  border-radius: var(--radius-full);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--dark);
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1.5px solid rgba(217, 119, 6, 0.45);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  transition: var(--transition);
+}
+
+.routes-more-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #FFFFFF;
+}
+
+.routes-more-btn[hidden] {
+  display: none;
+}
+
 .gallery-more-row {
   display: flex;
   justify-content: center;
@@ -3477,9 +3702,6 @@ body::before {
   .gallery-slide {
     flex-basis: calc((100% - 16px) / 2);
   }
-  .tours-card-grid {
-    --per-view: 2;
-  }
   /* Single column: label + heading first, then the collage, then the rest */
   .about-grid {
     display: flex;
@@ -3557,9 +3779,6 @@ body::before {
   }
   .booking-pane {
     padding: 20px 16px;
-  }
-  .tours-card-grid {
-    --per-view: 1;
   }
   .footer-columns {
     grid-template-columns: 1fr;
@@ -3700,18 +3919,29 @@ body::before {
     align-items: stretch;
     gap: 12px;
   }
+  /* Phones: shorter labels ("All", "BIA Airport", "Colombo") so all three
+     tabs fit on one line with no sideways scrolling */
   .routes-filter-tabs {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    overflow-x: auto;
+    gap: 4px;
   }
   .route-tab-btn {
-    flex: 1;
+    flex: 1 1 auto;
+    min-width: 0;
     justify-content: center;
-    padding: 7px 8px;
-    font-size: 0.72rem;
+    gap: 5px;
+    padding: 8px 8px;
+    font-size: 0.74rem;
     white-space: nowrap;
+  }
+  .route-tab-btn .tab-badge {
+    padding: 1px 6px;
+    font-size: 0.66rem;
+  }
+  .route-tab-btn .tab-long {
+    display: none;
   }
   .routes-search-box {
     width: 100%;
