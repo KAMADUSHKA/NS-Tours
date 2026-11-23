@@ -22,21 +22,46 @@ const CURRENCIES = {
 };
 
 let currentCurrency = 'EUR'; // Main market is Europe
+try {
+  const savedCurr = typeof localStorage !== 'undefined' && localStorage.getItem('ns_tours_currency');
+  if (savedCurr && CURRENCIES[savedCurr]) {
+    currentCurrency = savedCurr;
+  }
+} catch (e) {}
 
 // Base distances and sedan rates in USD
 const ROUTE_DATA = {
-  'CMB Airport_Mirissa': { km: 175, time: '2h 15m', usd: 85 },
-  'CMB Airport_Galle': { km: 155, time: '1h 55m', usd: 75 },
-  'CMB Airport_Bentota': { km: 105, time: '1h 30m', usd: 55 },
-  'CMB Airport_Colombo': { km: 35, time: '35m', usd: 28 },
-  'CMB Airport_Kandy': { km: 115, time: '3h 00m', usd: 65 },
-  'CMB Airport_Sigiriya': { km: 148, time: '3h 30m', usd: 80 },
-  'CMB Airport_Ella': { km: 210, time: '4h 30m', usd: 115 },
-  'CMB Airport_Yala': { km: 245, time: '4h 00m', usd: 125 },
-  'Colombo_Galle': { km: 125, time: '1h 40m', usd: 65 },
-  'Galle_Ella': { km: 170, time: '3h 30m', usd: 90 },
-  'Kandy_Ella': { km: 135, time: '3h 45m', usd: 75 },
-  'Kandy_Sigiriya': { km: 90, time: '2h 15m', usd: 55 }
+  'CMB Airport_Negombo': { km: 15, time: '20m', lkr: 2200, usd: 7 },
+  'CMB Airport_Colombo': { km: 35, time: '35m', lkr: 4900, usd: 16 },
+  'CMB Airport_Aluthgama': { km: 100, time: '1h 25m', lkr: 11200, usd: 37 },
+  'CMB Airport_Bentota': { km: 105, time: '1h 30m', lkr: 11300, usd: 37 },
+  'CMB Airport_Ambalangoda': { km: 130, time: '1h 45m', lkr: 13900, usd: 46 },
+  'CMB Airport_Hikkaduwa': { km: 140, time: '1h 50m', lkr: 15400, usd: 50 },
+  'CMB Airport_Galle': { km: 155, time: '1h 55m', lkr: 17500, usd: 57 },
+  'CMB Airport_Unawatuna': { km: 158, time: '2h 00m', lkr: 18000, usd: 59 },
+  'CMB Airport_Ahangama': { km: 165, time: '2h 10m', lkr: 19200, usd: 63 },
+  'CMB Airport_Koggala': { km: 162, time: '2h 05m', lkr: 18900, usd: 62 },
+  'CMB Airport_Weligama': { km: 172, time: '2h 15m', lkr: 19900, usd: 65 },
+  'CMB Airport_Mirissa': { km: 175, time: '2h 15m', lkr: 20600, usd: 68 },
+  'CMB Airport_Matara': { km: 185, time: '2h 25m', lkr: 21200, usd: 70 },
+  'CMB Airport_Tangalle': { km: 215, time: '2h 45m', lkr: 24200, usd: 79 },
+  'CMB Airport_Ella': { km: 210, time: '4h 30m', lkr: 38200, usd: 125 },
+  'CMB Airport_Nuwara Eliya': { km: 160, time: '4h 00m', lkr: 17400, usd: 57 },
+  'CMB Airport_Kandy': { km: 115, time: '3h 00m', lkr: 13700, usd: 45 },
+  'CMB Airport_Sigiriya': { km: 148, time: '3h 30m', lkr: 16500, usd: 54 },
+  'CMB Airport_Dambulla': { km: 135, time: '3h 15m', lkr: 14500, usd: 48 },
+  'CMB Airport_Yala': { km: 245, time: '4h 00m', lkr: 31900, usd: 105 },
+  'CMB Airport_Udawalawe': { km: 210, time: '3h 45m', lkr: 29700, usd: 97 },
+  'CMB Airport_Trincomalee': { km: 240, time: '4h 45m', lkr: 26400, usd: 87 },
+  'CMB Airport_Arugam Bay': { km: 320, time: '6h 00m', lkr: 47400, usd: 155 },
+  'CMB Airport_Jaffna': { km: 380, time: '6h 30m', lkr: 40900, usd: 134 },
+  'Colombo_Negombo': { km: 38, time: '45m', lkr: 5200, usd: 17 },
+  'Colombo_Galle': { km: 125, time: '1h 40m', lkr: 17300, usd: 57 },
+  'Colombo_Mirissa': { km: 150, time: '2h 00m', lkr: 20400, usd: 67 },
+  'Colombo_Bentota': { km: 85, time: '1h 15m', lkr: 11200, usd: 37 },
+  'Colombo_Kandy': { km: 120, time: '3h 15m', lkr: 16400, usd: 54 },
+  'Colombo_Sigiriya': { km: 175, time: '3h 45m', lkr: 24000, usd: 79 },
+  'Colombo_Ella': { km: 205, time: '4h 30m', lkr: 42000, usd: 138 }
 };
 
 const VEHICLE_RATES = {
@@ -330,20 +355,35 @@ document.addEventListener('DOMContentLoaded', () => {
   initPlannerForm();
   updateRouteTablePrices();
   updateVehicleCardPrices();
+  initRouteTableFilters();
 });
 
 /* ==========================================================================
    CURRENCY CONVERSION SYSTEM
    ========================================================================== */
 function initCurrency() {
+  try {
+    const saved = localStorage.getItem('ns_tours_currency');
+    if (saved && CURRENCIES[saved]) {
+      currentCurrency = saved;
+    }
+  } catch (e) {}
+
   // Header selector (desktop) and mobile-menu selector stay in sync
   const selectors = ['currencySelector', 'currencySelectorMobile']
     .map(id => document.getElementById(id))
     .filter(Boolean);
 
+  selectors.forEach(s => {
+    s.value = currentCurrency;
+  });
+
   selectors.forEach(selector => {
     selector.addEventListener('change', (e) => {
       currentCurrency = e.target.value;
+      try {
+        localStorage.setItem('ns_tours_currency', currentCurrency);
+      } catch (err) {}
       selectors.forEach(other => { other.value = currentCurrency; });
       updateAllPrices();
     });
@@ -356,6 +396,17 @@ function formatPrice(amountUSD) {
   return `${curr.symbol} ${converted.toLocaleString()}`;
 }
 
+function formatPriceLKR(amountLKR) {
+  const curr = CURRENCIES[currentCurrency] || CURRENCIES.USD;
+  if (currentCurrency === 'LKR') {
+    return `${curr.symbol} ${Math.round(amountLKR).toLocaleString()}`;
+  }
+  const lkrBaseRate = (CURRENCIES.LKR && CURRENCIES.LKR.rate) || 305;
+  const usd = amountLKR / lkrBaseRate;
+  const converted = Math.max(1, Math.round(usd * curr.rate));
+  return `${curr.symbol} ${converted.toLocaleString()}`;
+}
+
 function updateAllPrices() {
   renderTourCards(getActiveFilter());
   calculateFare();
@@ -365,8 +416,12 @@ function updateAllPrices() {
 }
 
 function updateVehicleCardPrices() {
-  document.querySelectorAll('.vehicle-price[data-price-usd]').forEach(el => {
-    el.textContent = formatPrice(Number(el.dataset.priceUsd));
+  document.querySelectorAll('.vehicle-price').forEach(el => {
+    if (el.dataset.lkr) {
+      el.textContent = formatPriceLKR(Number(el.dataset.lkr));
+    } else if (el.dataset.priceUsd) {
+      el.textContent = formatPrice(Number(el.dataset.priceUsd));
+    }
   });
 }
 
@@ -452,28 +507,31 @@ function calculateFare() {
   const routeKey2 = `${dVal}_${pVal}`;
   const route = ROUTE_DATA[routeKey1] || ROUTE_DATA[routeKey2];
 
-  let baseUsd = 70;
+  let baseLkr = 21000;
   let kmText = 'Est. 120 km';
   let timeText = 'Approx 2h 00m';
 
   if (pVal === dVal) {
-    priceDisplay.textContent = formatPrice(25);
+    priceDisplay.textContent = formatPriceLKR(3500);
     if (routeMeta) routeMeta.textContent = 'Local transfer / within city limits';
     return;
   }
 
   if (route) {
-    baseUsd = route.usd;
+    baseLkr = route.lkr || (route.usd * 305);
     kmText = `${route.km} km`;
     timeText = route.time;
-  } else {
-    baseUsd = 90;
   }
 
-  const factor = (VEHICLE_RATES[vVal] && VEHICLE_RATES[vVal].factor) || 1.0;
-  const totalUsd = Math.round(baseUsd * factor);
+  // Vehicle factor (Sedan: 1.0, SUV: ~1.30, Van: ~1.55, Coach: ~2.40)
+  let factor = 1.0;
+  if (vVal === 'suv') factor = 1.30;
+  else if (vVal === 'van') factor = 1.55;
+  else if (vVal === 'coach') factor = 2.40;
 
-  priceDisplay.textContent = formatPrice(totalUsd);
+  const totalLkr = Math.round(baseLkr * factor);
+
+  priceDisplay.textContent = formatPriceLKR(totalLkr);
   if (routeMeta) {
     routeMeta.textContent = `${kmText} • ${timeText} • Highway Tolls & Fuel Included`;
   }
@@ -483,15 +541,64 @@ function calculateFare() {
    POPULAR ROUTES TABLE
    ========================================================================== */
 function updateRouteTablePrices() {
-  const rows = document.querySelectorAll('.route-row');
-  rows.forEach(row => {
-    const usd = parseFloat(row.dataset.usd);
-    const priceCell = row.querySelector('.route-price-tag');
-    if (usd && priceCell) {
-      priceCell.textContent = formatPrice(usd);
+  const tags = document.querySelectorAll('.route-price-tag[data-lkr]');
+  tags.forEach(tag => {
+    const lkr = parseFloat(tag.dataset.lkr);
+    if (!isNaN(lkr)) {
+      tag.textContent = formatPriceLKR(lkr);
     }
   });
 }
+
+function initRouteTableFilters() {
+  const tabs = document.querySelectorAll('.route-tab-btn');
+  const searchInput = document.getElementById('routeSearchInput');
+  const rows = document.querySelectorAll('.route-row');
+
+  let activeOrigin = 'all';
+  let searchTerm = '';
+
+  function applyFilter() {
+    rows.forEach(row => {
+      const origin = row.dataset.origin;
+      const dest = (row.dataset.dest || '').toLowerCase();
+      const originName = (row.dataset.from || '').toLowerCase();
+
+      const matchesOrigin = activeOrigin === 'all' || origin === activeOrigin;
+      const matchesSearch = !searchTerm || dest.includes(searchTerm) || originName.includes(searchTerm);
+
+      row.style.display = (matchesOrigin && matchesSearch) ? '' : 'none';
+    });
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeOrigin = tab.dataset.filter;
+      applyFilter();
+    });
+  });
+
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      searchTerm = e.target.value.trim().toLowerCase();
+      applyFilter();
+    });
+  }
+}
+
+function bookTransferRoute(origin, dest, vehicle, lkr) {
+  let vehicleStr = vehicle ? `\n*Vehicle:* ${vehicle}` : '';
+  let fareStr = '';
+  if (lkr) {
+    fareStr = `\n*Fixed Rate:* ${formatPriceLKR(lkr)}`;
+  }
+  const msg = `Hello NS Travel And Tours!\n\nI would like to book a private transfer:\n\n*From:* ${origin}\n*To:* ${dest}${vehicleStr}${fareStr}\n*Expressway Tolls & Fuel:* Included\n\nPlease confirm driver availability and reservation. Thank you!`;
+  openWhatsApp(msg);
+}
+window.bookTransferRoute = bookTransferRoute;
+window.quickBookRoute = bookTransferRoute;
 
 /* ==========================================================================
    TOUR CARDS & FILTERING
