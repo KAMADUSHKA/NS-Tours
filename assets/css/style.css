@@ -3761,6 +3761,13 @@ body::before {
   .btn-header-wa {
     display: none;
   }
+  /* The header WhatsApp button is hidden here, so the floating one shows
+     from the start (on desktop it waits until the hero is scrolled past) */
+  .wa-float-btn {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
   .btn-header-book {
     padding: 8px 14px;
   }
